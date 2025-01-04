@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">PartyZone</string>
+    <string name="let_s_get_you_signed_in">Let\'s get you signed in</string>
+    <string name="sign_in_using_credentials_or_your_google_account">Sign in using credentials or your Google account</string>
+    <string name="sign_in_with_google">Sign in with Google</string>
+    <string name="google_icon">Google Icon</string>
+    <string name="don_t_have_an_account_yet">Don\'t have an account yet?</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="sign_in">Sign In</string>
+    <string name="lock_icon">Lock Icon</string>
+    <string name="password">Password</string>
+    <string name="email_icon">Email Icon</string>
+    <string name="email">Email</string>
+    <string name="username">userName</string>
+    <string name="profile_icon">Profile icon</string>
+    <string name="sign_up_with_google">Sign up with Google</string>
+    <string name="already_have_an_account">Already have an account?</string>
+    <string name="login">Login</string>
+    <string name="let_s_create_your_account">Let\'s create your account</string>
+    <string name="create_a_new_account_using_your_credentials">Create a new account using your credentials</string>
+</resources>
