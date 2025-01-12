@@ -14,7 +14,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -24,10 +23,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
+import com.app.partyzone.design_system.R
 import com.app.partyzone.design_system.theme.Theme.colors
 import com.app.partyzone.design_system.theme.Theme.radius
 import com.app.partyzone.design_system.theme.Theme.typography
@@ -46,7 +47,7 @@ fun PzTextField(
     shapeRadius: Shape = RoundedCornerShape(radius.medium),
     singleLine: Boolean = true,
     errorMessage: String = "",
-    correctValidation: Boolean = false,
+    //correctValidation: Boolean = false,
     isError: Boolean = errorMessage.isNotEmpty(),
 ) {
     var showPassword by remember { mutableStateOf(false) }
@@ -122,11 +123,11 @@ private fun TrailingIcon(
     IconButton(onClick = { togglePasswordVisibility() }) {
         Icon(
             imageVector = if (showPassword) Icons.Outlined.VisibilityOff else Icons.Outlined.Visibility,
-            contentDescription = if (showPassword) "Show Password" else "Hide Password",
+            contentDescription = if (showPassword) stringResource(R.string.show_password)
+            else stringResource(R.string.hide_password),
             tint = colors.contentTertiary
         )
     }
-
 }
 
 @Composable

@@ -1,0 +1,52 @@
+﻿package com.app.partyzone.seller.ui.screen.splash
+
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
+import com.app.partyzone.design_system.theme.Theme
+import com.app.partyzone.seller.R
+import com.app.partyzone.seller.ui.navigation.Screen
+import com.app.partyzone.seller.ui.util.LocalNavigationProvider
+import kotlinx.coroutines.delay
+
+@Composable
+fun SplashScreen(
+    innerPadding: PaddingValues,
+) {
+    val navController = LocalNavigationProvider.current
+
+    LaunchedEffect(Unit) {
+        delay(500)
+        navController.navigate(Screen.Login)
+    }
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Theme.colors.primary)
+            .padding(innerPadding),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        Image(
+            painter = painterResource(id = com.app.partyzone.design_system.R.drawable.logo),
+            contentDescription = stringResource(R.string.logo),
+            modifier = Modifier
+                .size(256.dp)
+                .align(Alignment.CenterHorizontally),
+            contentScale = androidx.compose.ui.layout.ContentScale.FillBounds
+        )
+    }
+}

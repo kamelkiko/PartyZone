@@ -1,5 +1,6 @@
 package com.app.partyzone.design_system.theme
 
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 
 data class Colors(
@@ -72,4 +73,15 @@ val DarkColors = Colors(
     pink = Color(0xFF261F1F),
     blue = Color(0xFF1F2326),
     green = Color(0xFF25261E),
+)
+
+private val gradientColors = listOf(
+    Color(0xFFFB0160),
+    Color(0xFFF703D0)
+)
+
+val brush = Brush.linearGradient(
+    colors = gradientColors,
+    start = androidx.compose.ui.geometry.Offset(0f, 100f),
+    end = androidx.compose.ui.geometry.Offset(100f, 100f)
 )

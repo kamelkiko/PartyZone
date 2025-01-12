@@ -2,16 +2,21 @@ package com.app.partyzone.design_system.composable
 
 import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -19,6 +24,7 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.unit.dp
 import com.app.partyzone.design_system.theme.Theme
+import com.app.partyzone.design_system.theme.brush
 
 @SuppressLint("UnusedContentLambdaTargetStateParameter")
 @ExperimentalMaterial3Api
@@ -30,21 +36,22 @@ fun PzButton(
     painter: Painter? = null,
     enabled: Boolean = true,
     textPadding: PaddingValues = PaddingValues(16.dp),
-    shape: Shape = RoundedCornerShape(Theme.radius.medium),
-    containerColor: Color = Theme.colors.primary,
+    shape: Shape = RoundedCornerShape(Theme.radius.large),
+    //containerColor: Color = Theme.colors.primary,
     contentColor: Color = Theme.colors.onPrimary,
     horizontalArrangement: Arrangement.Horizontal = Arrangement.Center,
     isLoading: Boolean = false,
 ) {
-    val buttonColor by animateColorAsState(
-        if (enabled) containerColor else Theme.colors.disable, label = ""
-    )
+//    val buttonColor by animateColorAsState(
+//        if (enabled) containerColor else Theme.colors.disable, label = ""
+//    )
 
     Surface(
-        modifier = modifier.height(56.dp),
+        modifier = modifier
+            .height(56.dp)
+            .background(brush, shape),
         onClick = onClick,
         shape = shape,
-        color = buttonColor,
         enabled = enabled,
         contentColor = contentColor,
     ) {
