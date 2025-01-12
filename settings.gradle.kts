@@ -21,4 +21,6 @@ dependencyResolutionManagement {
 
 rootProject.name = "PartyZone"
 include(":app")
- 
+include(":seller")
+include(":core")
+include(":design_system")

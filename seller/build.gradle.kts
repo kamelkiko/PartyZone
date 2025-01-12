@@ -4,16 +4,15 @@ plugins {
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
-    alias(libs.plugins.google.service)
     alias(libs.plugins.kotlin.serialization)
 }
 
 android {
-    namespace = "com.app.partyzone"
+    namespace = "com.app.partyzone.seller"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.app.partyzone"
+        applicationId = "com.app.partyzone.seller"
         minSdk = 26
         targetSdk = 35
         versionCode = 1
@@ -71,16 +70,6 @@ dependencies {
     //hilt
     implementation(libs.hilt.android)
     ksp(libs.hilt.android.compiler)
-
-    //data store
-    implementation(libs.data.store)
-
-    //firebase
-    implementation(platform(libs.firebase.bom))
-    implementation(libs.firebase.firestore)
-    implementation(libs.firebase.auth)
-    implementation(libs.firebase.storage)
-    implementation(libs.play.services.auth)
 
     //test
     testImplementation(libs.junit)
