@@ -57,28 +57,20 @@ composeCompiler {
 }
 
 dependencies {
-    // Core
+    //core
+    implementation(project(":core"))
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
-    implementation(libs.kotlin.datetime)
-    implementation(libs.kotlinx.serialization.json)
-
-    // Compose
-    implementation(libs.bundles.compose)
-    implementation(platform(libs.androidx.compose.bom))
-
-    //hilt
-    implementation(libs.hilt.android)
-    ksp(libs.hilt.android.compiler)
-
-    // Coil
-    implementation(libs.coil.compose)
 
     // Splash screen
     implementation(libs.androidx.core.splashscreen)
 
     //permission
     implementation(libs.com.google.accompanist.permissions)
+
+    //hilt
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.android.compiler)
 
     //data store
     implementation(libs.data.store)
