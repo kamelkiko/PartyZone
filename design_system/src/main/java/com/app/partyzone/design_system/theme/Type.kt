@@ -12,18 +12,17 @@ import com.app.partyzone.design_system.R
 fun headlineLarge(): TextStyle {
     return TextStyle(
         fontSize = 24.sp,
-        lineHeight = 32.4.sp,
-        fontFamily = FontFamily(Font(R.font.poppins_medium)),
-        fontWeight = FontWeight.W600,
+        fontFamily = FontFamily(Font(R.font.poppins_bold)),
+        fontWeight = FontWeight.Bold,
     )
 }
 
 @Composable
 fun headline(): TextStyle {
     return TextStyle(
-        fontSize = 20.sp,
-        fontFamily = FontFamily(Font(R.font.poppins_medium)),
-        fontWeight = FontWeight.W600,
+        fontSize = 16.sp,
+        fontFamily = FontFamily(Font(R.font.poppins_bold)),
+        fontWeight = FontWeight.Bold,
     )
 }
 
@@ -31,9 +30,8 @@ fun headline(): TextStyle {
 fun titleLarge(): TextStyle {
     return TextStyle(
         fontSize = 16.sp,
-        lineHeight = 20.sp,
-        fontFamily = FontFamily(Font(R.font.poppins_medium)),
-        fontWeight = FontWeight.W600,
+        fontFamily = FontFamily(Font(R.font.poppins_regular)),
+        fontWeight = FontWeight.Normal,
     )
 }
 
@@ -41,35 +39,34 @@ fun titleLarge(): TextStyle {
 fun title(): TextStyle {
     return TextStyle(
         fontSize = 14.sp,
-        fontFamily = FontFamily(Font(R.font.poppins_medium)),
-        fontWeight = FontWeight.W600,
+        fontFamily = FontFamily(Font(R.font.poppins_regular)),
+        fontWeight = FontWeight.Normal,
     )
 }
 
 @Composable
 fun titleMedium(): TextStyle {
     return TextStyle(
-        fontSize = 16.sp,
-        fontFamily = FontFamily(Font(R.font.poppins_medium)),
-        fontWeight = FontWeight.W400,
+        fontSize = 14.sp,
+        fontFamily = FontFamily(Font(R.font.poppins_bold)),
+        fontWeight = FontWeight.Bold,
     )
 }
 
 @Composable
 fun body(): TextStyle {
     return TextStyle(
-        fontSize = 14.sp,
-        lineHeight = 19.6.sp,
-        fontFamily = FontFamily(Font(R.font.poppins_medium)),
-        fontWeight = FontWeight.W400,
+        fontSize = 12.sp,
+        fontFamily = FontFamily(Font(R.font.poppins_semi_bold)),
+        fontWeight = FontWeight.SemiBold,
     )
 }
 
 @Composable
 fun caption(): TextStyle {
     return TextStyle(
-        fontFamily = FontFamily(Font(R.font.poppins_medium)),
-        fontWeight = FontWeight.W400,
+        fontFamily = FontFamily(Font(R.font.poppins_regular)),
+        fontWeight = FontWeight.Normal,
         fontSize = 12.sp,
     )
 }
