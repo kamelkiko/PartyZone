@@ -1,4 +1,13 @@
 <resources>
     <string name="app_name">Seller</string>
     <string name="logo">Logo</string>
+    <string name="welcome_back">Welcome Back!</string>
+    <string name="use_credentials_to_access_your_account">Use Credentials to access your account</string>
+    <string name="enter_username">Enter Username</string>
+    <string name="enter_password">Enter Password</string>
+    <string name="login">Login</string>
+    <string name="don_t_have_an_account">"Don’t have an account? "</string>
+    <string name="signup">Signup</string>
+    <string name="username_icon">Username icon</string>
+    <string name="password_icon">Password icon</string>
 </resources>

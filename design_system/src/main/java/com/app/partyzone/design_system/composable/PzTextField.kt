@@ -35,7 +35,6 @@ import com.app.partyzone.design_system.theme.Theme.typography
 
 @Composable
 fun PzTextField(
-    label: String,
     text: String,
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
@@ -45,6 +44,7 @@ fun PzTextField(
     hint: String = "",
     keyboardType: KeyboardType = KeyboardType.Text,
     shapeRadius: Shape = RoundedCornerShape(radius.medium),
+    leadingIcon: @Composable (() -> Unit)? = null,
     singleLine: Boolean = true,
     errorMessage: String = "",
     //correctValidation: Boolean = false,
@@ -56,13 +56,6 @@ fun PzTextField(
         modifier = modifier,
         horizontalAlignment = Alignment.Start
     ) {
-        Text(
-            text = label,
-            modifier = Modifier.padding(bottom = 8.dp),
-            style = typography.title,
-            color = colors.contentPrimary
-        )
-
         OutlinedTextField(
             modifier = textFieldModifier,
             value = text,
@@ -81,6 +74,7 @@ fun PzTextField(
             trailingIcon = if (keyboardType == KeyboardType.Password) {
                 { TrailingIcon(showPassword) { showPassword = !showPassword } }
             } else null,
+            leadingIcon = leadingIcon,
             visualTransformation = PzVisualTransformation(keyboardType, showPassword),
             isError = isError,
             //colors = TextFieldDefaults.outlinedTextFieldColors(

@@ -75,13 +75,13 @@ val DarkColors = Colors(
     green = Color(0xFF25261E),
 )
 
-private val gradientColors = listOf(
+val gradientColors = listOf(
     Color(0xFFFB0160),
     Color(0xFFF703D0)
 )
 
 val brush = Brush.linearGradient(
     colors = gradientColors,
-    start = androidx.compose.ui.geometry.Offset(0f, 100f),
-    end = androidx.compose.ui.geometry.Offset(100f, 100f)
+    start = androidx.compose.ui.geometry.Offset(0f, 0f),
+    end = androidx.compose.ui.geometry.Offset(1000f, 1000f)
 )
