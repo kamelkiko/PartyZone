@@ -127,7 +127,7 @@ private fun LoginContent() {
             onClick = { },
             modifier = Modifier
                 .fillMaxWidth()
-                .align(Alignment.CenterHorizontally)
+                .align(Alignment.CenterHorizontally),
         )
         Spacer(modifier = Modifier.height(30.dp))
         Row(

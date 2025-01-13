@@ -56,12 +56,19 @@ fun PzButton(
         contentColor = contentColor,
     ) {
         Row(
-            Modifier
+            if (enabled)
+                Modifier
+                    .defaultMinSize(
+                        minWidth = ButtonDefaults.MinWidth,
+                        minHeight = ButtonDefaults.MinHeight
+                    )
+                    .background(brush, shape)
+            else Modifier
                 .defaultMinSize(
                     minWidth = ButtonDefaults.MinWidth,
                     minHeight = ButtonDefaults.MinHeight
                 )
-                .background(brush, shape),
+                .background(Theme.colors.disable, shape),
             horizontalArrangement = horizontalArrangement,
             verticalAlignment = Alignment.CenterVertically,
         ) {
