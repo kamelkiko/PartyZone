@@ -80,7 +80,6 @@ private fun OnboardingContent() {
                 }
             },
             modifier = Modifier
-                //.align(Alignment.BottomEnd)
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp)
                 .height(56.dp)
