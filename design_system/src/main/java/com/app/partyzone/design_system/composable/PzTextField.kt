@@ -13,7 +13,9 @@ import androidx.compose.material.icons.outlined.VisibilityOff
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -43,11 +45,10 @@ fun PzTextField(
         .height(56.dp),
     hint: String = "",
     keyboardType: KeyboardType = KeyboardType.Text,
-    shapeRadius: Shape = RoundedCornerShape(radius.medium),
+    shapeRadius: Shape = RoundedCornerShape(radius.large),
     leadingIcon: @Composable (() -> Unit)? = null,
     singleLine: Boolean = true,
     errorMessage: String = "",
-    //correctValidation: Boolean = false,
     isError: Boolean = errorMessage.isNotEmpty(),
 ) {
     var showPassword by remember { mutableStateOf(false) }
@@ -62,8 +63,8 @@ fun PzTextField(
             placeholder = {
                 Text(
                     hint,
-                    style = typography.caption,
-                    color = colors.contentTertiary
+                    style = typography.title,
+                    color = Color(0x3325131A)
                 )
             },
             onValueChange = onValueChange,
@@ -77,6 +78,15 @@ fun PzTextField(
             leadingIcon = leadingIcon,
             visualTransformation = PzVisualTransformation(keyboardType, showPassword),
             isError = isError,
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedContainerColor = ContainerColor(isError),
+                unfocusedContainerColor = colors.surface,
+                focusedBorderColor = colors.contentTertiary,
+                unfocusedBorderColor = colors.contentBorder.copy(alpha = 0.1f),
+                errorBorderColor = Color(0xFFFB0160),
+                errorCursorColor = Color(0xFFFB0160),
+                cursorColor = colors.contentTertiary,
+            )
             //colors = TextFieldDefaults.outlinedTextFieldColors(
 //                containerColor = ContainerColor(isError, correctValidation),
 //                unfocusedBorderColor = colors.contentBorder.copy(alpha = 0.1f),
@@ -91,19 +101,17 @@ fun PzTextField(
             Text(
                 text = errorMessage,
                 modifier = Modifier.padding(top = 8.dp),
-                style = typography.caption,
-                color = colors.primary
+                style = typography.body,
+                color = Color(0xFFFB0160)
             )
         }
     }
 }
 
 @Composable
-private fun ContainerColor(isError: Boolean, correctValidation: Boolean): Color {
+private fun ContainerColor(isError: Boolean): Color {
     return if (isError) {
-        colors.hover
-    } else if (correctValidation) {
-        colors.successContainer
+        Color(0xFFFB0160)
     } else {
         colors.surface
     }
