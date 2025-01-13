@@ -25,4 +25,8 @@
     <string name="party">Party</string>
     <string name="settings">Settings</string>
     <string name="profile">Profile</string>
+    <string name="welcome">Welcome</string>
+    <string name="map_icon">Map icon</string>
+    <string name="search_icon">Search icon</string>
+    <string name="search">Search</string>
 </resources>
