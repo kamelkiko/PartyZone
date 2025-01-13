@@ -1,7 +1,8 @@
-package com.app.partyzone.seller.ui.screen.auth
+package com.app.partyzone.seller.ui.screen.auth.signup
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,6 +14,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.outlined.Email
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -33,24 +37,29 @@ import com.app.partyzone.design_system.composable.PzTextField
 import com.app.partyzone.design_system.theme.Theme
 import com.app.partyzone.design_system.theme.brush
 import com.app.partyzone.seller.R
+import com.app.partyzone.seller.ui.navigation.Screen
+import com.app.partyzone.seller.ui.util.LocalNavigationProvider
 
 @Composable
-fun LoginScreen(innerPadding: PaddingValues) {
+fun SignupScreen(innerPadding: PaddingValues) {
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(Theme.colors.primary)
             .padding(innerPadding)
     ) {
-        LoginContent()
+        SignupContent()
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun LoginContent() {
+private fun SignupContent() {
     var name by remember { mutableStateOf("") }
+    var name2 by remember { mutableStateOf("") }
     var pass by remember { mutableStateOf("") }
+    val nav = LocalNavigationProvider.current
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -95,9 +104,26 @@ private fun LoginContent() {
             keyboardType = KeyboardType.Text,
             leadingIcon = {
                 Icon(
-                    painter = painterResource(id = com.app.partyzone.design_system.R.drawable.username_icon),
+                    painter = painterResource(com.app.partyzone.design_system.R.drawable.username_icon),
                     contentDescription = stringResource(R.string.username_icon),
                     tint = Theme.colors.contentPrimary
+                )
+            },
+            textFieldModifier = Modifier
+                .fillMaxWidth()
+                .height(56.dp)
+        )
+        Spacer(modifier = Modifier.height(20.dp))
+        PzTextField(
+            hint = stringResource(R.string.enter_email),
+            text = name2,
+            onValueChange = { name2 = it },
+            keyboardType = KeyboardType.Email,
+            leadingIcon = {
+                Icon(
+                    painter = painterResource(id = com.app.partyzone.design_system.R.drawable.email_icon),
+                    contentDescription = stringResource(R.string.email_icon),
+                    tint = Theme.colors.contentTertiary
                 )
             },
             textFieldModifier = Modifier
@@ -123,7 +149,7 @@ private fun LoginContent() {
         )
         Spacer(modifier = Modifier.height(30.dp))
         PzButton(
-            title = stringResource(R.string.login),
+            title = stringResource(R.string.signup),
             onClick = { },
             modifier = Modifier
                 .fillMaxWidth()
@@ -136,7 +162,7 @@ private fun LoginContent() {
             horizontalArrangement = Arrangement.Center
         ) {
             Text(
-                text = stringResource(R.string.don_t_have_an_account),
+                text = stringResource(R.string.do_have_an_account),
                 color = Theme.colors.contentPrimary,
                 style = Theme.typography.title,
                 textAlign = TextAlign.Center,
@@ -144,7 +170,7 @@ private fun LoginContent() {
                     .align(Alignment.CenterVertically)
             )
             Text(
-                text = stringResource(R.string.signup),
+                text = stringResource(R.string.login),
                 color = Theme.colors.contentSecondary,
                 style = Theme.typography.title.copy(
                     brush = brush
@@ -152,6 +178,7 @@ private fun LoginContent() {
                 textAlign = TextAlign.Center,
                 modifier = Modifier
                     .align(Alignment.CenterVertically)
+                    .clickable { nav.navigate(Screen.Login) }
             )
         }
     }

@@ -4,7 +4,8 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.app.partyzone.seller.ui.screen.auth.LoginScreen
+import com.app.partyzone.seller.ui.screen.auth.login.LoginScreen
+import com.app.partyzone.seller.ui.screen.auth.signup.SignupScreen
 import com.app.partyzone.seller.ui.screen.splash.SplashScreen
 import com.app.partyzone.seller.ui.util.LocalNavigationProvider
 
@@ -21,6 +22,10 @@ fun AppNavHost(innerPadding: PaddingValues) {
 
         composable<Screen.Login> {
             LoginScreen(innerPadding = innerPadding)
+        }
+
+        composable<Screen.Signup> {
+            SignupScreen(innerPadding = innerPadding)
         }
     }
 }

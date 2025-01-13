@@ -10,4 +10,7 @@
     <string name="signup">Signup</string>
     <string name="username_icon">Username icon</string>
     <string name="password_icon">Password icon</string>
+    <string name="enter_email">Enter Email</string>
+    <string name="email_icon">Email icon</string>
+    <string name="do_have_an_account">"Do have an account? "</string>
 </resources>
