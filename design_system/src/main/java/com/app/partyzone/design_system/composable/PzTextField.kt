@@ -64,7 +64,7 @@ fun PzTextField(
                 Text(
                     hint,
                     style = typography.title,
-                    color = Color(0x3325131A)
+                    color = colors.contentTertiary
                 )
             },
             onValueChange = onValueChange,
@@ -79,9 +79,9 @@ fun PzTextField(
             visualTransformation = PzVisualTransformation(keyboardType, showPassword),
             isError = isError,
             colors = OutlinedTextFieldDefaults.colors(
-                focusedContainerColor = ContainerColor(isError),
+                focusedContainerColor = colors.primary,
                 unfocusedContainerColor = colors.surface,
-                focusedBorderColor = colors.contentTertiary,
+                focusedBorderColor = Color(0xFFF703D0).copy(alpha = 0.37f),
                 unfocusedBorderColor = colors.contentBorder.copy(alpha = 0.1f),
                 errorBorderColor = Color(0xFFFB0160),
                 errorCursorColor = Color(0xFFFB0160),
@@ -105,15 +105,6 @@ fun PzTextField(
                 color = Color(0xFFFB0160)
             )
         }
-    }
-}
-
-@Composable
-private fun ContainerColor(isError: Boolean): Color {
-    return if (isError) {
-        Color(0xFFFB0160)
-    } else {
-        colors.surface
     }
 }
 
