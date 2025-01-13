@@ -2,7 +2,7 @@ package com.app.partyzone.ui.screen.google
 
 import android.content.Intent
 import androidx.lifecycle.ViewModel
-import com.app.partyzone.domain.repository.AuthGoogleRepository
+import com.app.partyzone.core.domain.repository.AuthGoogleRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

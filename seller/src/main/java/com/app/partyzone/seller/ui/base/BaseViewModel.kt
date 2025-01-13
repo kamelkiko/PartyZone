@@ -2,14 +2,14 @@ package com.app.partyzone.seller.ui.base
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.app.partyzone.core.AuthorizationException
-import com.app.partyzone.core.InvalidVerificationCodeException
-import com.app.partyzone.core.NetworkException
-import com.app.partyzone.core.NotFoundException
-import com.app.partyzone.core.PermissionDeniedException
-import com.app.partyzone.core.ServerErrorException
-import com.app.partyzone.core.UnknownErrorException
-import com.app.partyzone.core.ValidationNetworkException
+import com.app.partyzone.core.domain.util.AuthorizationException
+import com.app.partyzone.core.domain.util.InvalidVerificationCodeException
+import com.app.partyzone.core.domain.util.NetworkException
+import com.app.partyzone.core.domain.util.NotFoundException
+import com.app.partyzone.core.domain.util.PermissionDeniedException
+import com.app.partyzone.core.domain.util.ServerErrorException
+import com.app.partyzone.core.domain.util.UnknownErrorException
+import com.app.partyzone.core.domain.util.ValidationNetworkException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

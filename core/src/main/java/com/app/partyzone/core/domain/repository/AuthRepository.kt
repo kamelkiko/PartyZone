@@ -1,4 +1,4 @@
-package com.app.partyzone.domain.repository
+package com.app.partyzone.core.domain.repository
 
 interface AuthRepository {
     suspend fun login(email: String, password: String): Boolean

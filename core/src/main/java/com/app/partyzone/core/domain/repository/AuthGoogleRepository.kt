@@ -1,4 +1,4 @@
-package com.app.partyzone.domain.repository
+package com.app.partyzone.core.domain.repository
 
 import android.content.Intent
 import android.content.IntentSender

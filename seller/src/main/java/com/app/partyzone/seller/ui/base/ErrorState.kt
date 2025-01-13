@@ -1,6 +1,6 @@
 package com.app.partyzone.seller.ui.base
 
-import com.app.partyzone.core.AuthorizationException
+import com.app.partyzone.core.domain.util.AuthorizationException
 
 sealed interface ErrorState {
     data class NetworkError(val message: String?) : ErrorState

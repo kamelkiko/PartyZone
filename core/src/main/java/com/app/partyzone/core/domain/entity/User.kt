@@ -1,4 +1,4 @@
-package com.app.partyzone.domain.entity
+package com.app.partyzone.core.domain.entity
 
 data class User(
     val id: String,

@@ -1,4 +1,4 @@
-package com.app.partyzone.di
+package com.app.partyzone.core.di
 
 import android.content.Context
 import androidx.datastore.core.DataStore

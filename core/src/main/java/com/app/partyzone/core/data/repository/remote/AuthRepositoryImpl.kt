@@ -1,6 +1,6 @@
-package com.app.partyzone.data.repository.remote
+package com.app.partyzone.core.data.repository.remote
 
-import com.app.partyzone.domain.repository.AuthRepository
+import com.app.partyzone.core.domain.repository.AuthRepository
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.UserProfileChangeRequest
 import kotlinx.coroutines.tasks.await

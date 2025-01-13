@@ -2,7 +2,7 @@ package com.app.partyzone.ui.screen.auth.signup
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.app.partyzone.domain.repository.AuthRepository
+import com.app.partyzone.core.domain.repository.AuthRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow

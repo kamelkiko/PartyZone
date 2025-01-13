@@ -1,11 +1,11 @@
-package com.app.partyzone.di
+package com.app.partyzone.core.di
 
-import com.app.partyzone.data.repository.preferences.UserPreferencesRepository
-import com.app.partyzone.data.repository.remote.AuthGoogleRepoImpl
-import com.app.partyzone.data.repository.remote.AuthRepositoryImpl
-import com.app.partyzone.domain.repository.AuthGoogleRepository
-import com.app.partyzone.domain.repository.AuthRepository
-import com.app.partyzone.domain.repository.IUserPreferencesRepository
+import com.app.partyzone.core.data.repository.preferences.UserPreferencesRepository
+import com.app.partyzone.core.data.repository.remote.AuthGoogleRepoImpl
+import com.app.partyzone.core.data.repository.remote.AuthRepositoryImpl
+import com.app.partyzone.core.domain.repository.AuthGoogleRepository
+import com.app.partyzone.core.domain.repository.AuthRepository
+import com.app.partyzone.core.domain.repository.IUserPreferencesRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

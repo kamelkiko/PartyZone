@@ -1,7 +1,6 @@
-package com.app.partyzone.di
+package com.app.partyzone.core.di
 
 import android.content.Context
-import com.app.partyzone.GOOGLE_TOKEN
 import com.google.android.gms.auth.api.identity.Identity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
@@ -49,3 +48,6 @@ object FireBaseModule {
         Identity.getSignInClient(context)
 
 }
+
+private const val GOOGLE_TOKEN =
+    "31938921723-req7sk1kasc2qahl5k2oo0eeigkpp9g4.apps.googleusercontent.com"

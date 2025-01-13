@@ -1,4 +1,4 @@
-package com.app.partyzone.data.util
+package com.app.partyzone.core.data.util
 
 import androidx.datastore.preferences.core.booleanPreferencesKey
 

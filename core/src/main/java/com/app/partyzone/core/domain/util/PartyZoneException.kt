@@ -1,4 +1,4 @@
-package com.app.partyzone.core
+package com.app.partyzone.core.domain.util
 
 open class PartyZoneException(message: String?) : Exception(message)
 

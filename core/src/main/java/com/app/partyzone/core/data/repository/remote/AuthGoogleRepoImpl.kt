@@ -1,8 +1,8 @@
-package com.app.partyzone.data.repository.remote
+package com.app.partyzone.core.data.repository.remote
 
 import android.content.Intent
 import android.content.IntentSender
-import com.app.partyzone.domain.repository.AuthGoogleRepository
+import com.app.partyzone.core.domain.repository.AuthGoogleRepository
 import com.google.android.gms.auth.api.identity.BeginSignInRequest
 import com.google.android.gms.auth.api.identity.SignInClient
 import com.google.firebase.auth.FirebaseAuth
