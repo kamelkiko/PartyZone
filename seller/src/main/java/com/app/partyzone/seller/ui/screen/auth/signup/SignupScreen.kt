@@ -153,6 +153,7 @@ private fun SignupContent() {
             onClick = { },
             modifier = Modifier
                 .fillMaxWidth()
+                .height(56.dp)
                 .align(Alignment.CenterHorizontally),
         )
         Spacer(modifier = Modifier.height(30.dp))

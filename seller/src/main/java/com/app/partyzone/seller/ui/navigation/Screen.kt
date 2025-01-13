@@ -11,4 +11,7 @@ sealed interface Screen {
 
     @Serializable
     data object Signup : Screen
+
+    @Serializable
+    data object Onboarding : Screen
 }

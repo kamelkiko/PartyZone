@@ -1,0 +1,129 @@
+package com.app.partyzone.seller.ui.screen.onboarding
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
+import com.app.partyzone.design_system.composable.PzButton
+import com.app.partyzone.design_system.theme.Theme
+import com.app.partyzone.seller.R
+import com.app.partyzone.seller.ui.navigation.Screen
+import com.app.partyzone.seller.ui.screen.onboarding.composable.CenteredContentWithImageAndText
+import com.app.partyzone.seller.ui.screen.onboarding.composable.GradientPagerIndicator
+import com.app.partyzone.seller.ui.util.LocalNavigationProvider
+import kotlinx.coroutines.launch
+
+@Composable
+fun OnboardingScreen(innerPadding: PaddingValues) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Theme.colors.primary)
+            .padding(innerPadding)
+    ) {
+        OnboardingContent()
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun OnboardingContent() {
+    val pagerState = rememberPagerState { 3 }
+    val coroutineScope = rememberCoroutineScope()
+    val nav = LocalNavigationProvider.current
+
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Theme.colors.primary),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        // HorizontalPager for swiping between screens
+        HorizontalPager(
+            state = pagerState,
+            modifier = Modifier.weight(1f),
+        ) { page ->
+            when (page) {
+                0 -> OnboardingScreen1()
+                1 -> OnboardingScreen2()
+                2 -> OnboardingScreen3()
+            }
+        }
+
+        GradientPagerIndicator(
+            pagerState = pagerState,
+            modifier = Modifier
+                .padding(16.dp)
+                .align(Alignment.CenterHorizontally),
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        PzButton(
+            title = if (pagerState.currentPage == 2) stringResource(R.string.get_started)
+            else
+                stringResource(R.string.next),
+            onClick = {
+                if (pagerState.currentPage < 2) {
+                    coroutineScope.launch {
+                        pagerState.animateScrollToPage(pagerState.currentPage + 1)
+                    }
+                } else {
+                    nav.navigate(Screen.Login)
+                }
+            },
+            modifier = Modifier
+                //.align(Alignment.BottomEnd)
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp)
+                .height(56.dp)
+        )
+    }
+}
+
+
+@Composable
+fun OnboardingScreen1() {
+    CenteredContentWithImageAndText(
+        imageRes = com.app.partyzone.design_system.R.drawable.logo,
+        title = stringResource(R.string.find_your_favourite_parties_here),
+        subtitle = stringResource(R.string.welcome_to_our_app_get_started_with_the_best_experience),
+        titleColor = Theme.colors.contentPrimary,
+        subtitleColor = Theme.colors.contentSecondary,
+        titleStyle = Theme.typography.headlineLarge,
+        subtitleStyle = Theme.typography.title
+    )
+}
+
+@Composable
+fun OnboardingScreen2() {
+    CenteredContentWithImageAndText(
+        imageRes = com.app.partyzone.design_system.R.drawable.logo,
+        title = stringResource(R.string.explore_your_nearby_party_place_here),
+        subtitle = stringResource(R.string.explore_amazing_features_and_services_tailored_for_you),
+        titleColor = Theme.colors.contentPrimary,
+        subtitleColor = Theme.colors.contentSecondary,
+        titleStyle = Theme.typography.headlineLarge,
+        subtitleStyle = Theme.typography.title
+    )
+}
+
+@Composable
+fun OnboardingScreen3() {
+    CenteredContentWithImageAndText(
+        imageRes = com.app.partyzone.design_system.R.drawable.logo,
+        title = stringResource(R.string.get_started),
+        subtitle = stringResource(R.string.start_your_journey_with_us_and_enjoy_seamless_experience),
+        titleColor = Theme.colors.contentPrimary,
+        subtitleColor = Theme.colors.contentSecondary,
+        titleStyle = Theme.typography.headlineLarge,
+        subtitleStyle = Theme.typography.title
+    )
+}
