@@ -22,7 +22,7 @@ fun AppNavHost(innerPadding: PaddingValues) {
     val navController = LocalNavigationProvider.current
     NavHost(
         navController = navController,
-        startDestination = Screen.Splash
+        startDestination = Screen.Home
     ) {
         composable<Screen.Splash> {
             SplashScreen(innerPadding = innerPadding)

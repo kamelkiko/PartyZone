@@ -1,6 +1,5 @@
 package com.app.partyzone.design_system.composable
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -22,18 +21,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.Role
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.app.partyzone.design_system.theme.Theme
+import com.app.partyzone.design_system.theme.gradientColors
 
 @Composable
 fun PzNavigationBar(
     modifier: Modifier = Modifier,
     navigationBarHeight: Dp = 64.dp,
-    backgroundColor: Color = Theme.colors.surface,
+    backgroundColor: Color = Theme.colors.primary,
     contentColor: Color = contentColorFor(backgroundColor),
     topBorder: Dp = 1.dp,
     borderColor: Color = Theme.colors.divider,
@@ -68,29 +68,37 @@ fun PzNavigationBar(
 fun RowScope.PzNavigationBarItem(
     selected: Boolean,
     onClick: () -> Unit,
-    icon: @Composable (tint: Color) -> Unit,
+    icon: @Composable (tint: Brush) -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
-    label: @Composable ((style: TextStyle) -> Unit)? = null,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
 ) {
     val styledIcon = @Composable {
-        val iconColor by animateColorAsState(
-            if (selected) Theme.colors.primary else Theme.colors.contentTertiary, label = "",
-        )
+        val iconColor =
+            if (selected) Brush.horizontalGradient(gradientColors) else Brush.linearGradient(
+                colors = listOf(
+                    Theme.colors.contentPrimary,
+                    Theme.colors.contentPrimary
+                )
+            )
         icon(iconColor)
     }
 
-    val styledLabel = @Composable {
-        val textColor by animateColorAsState(
-            if (selected) Theme.colors.primary else Theme.colors.contentTertiary,
-        )
-        val style =
-            Theme.typography.caption.copy(color = textColor)
-        label?.let {
-            it(style)
-        }
-    }
+//    val styledLabel = @Composable {
+//        val textColor =
+//            if (selected) Brush.horizontalGradient(gradientColors) else Brush.linearGradient(
+//                colors = listOf(
+//                    Theme.colors.contentPrimary,
+//                    Theme.colors.contentPrimary
+//                )
+//            )
+//
+//        val style =
+//            Theme.typography.caption.copy(brush = textColor)
+//        label?.let {
+//            it(style)
+//        }
+//    }
 
     Box(
         modifier
@@ -112,9 +120,9 @@ fun RowScope.PzNavigationBarItem(
             verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
             styledIcon()
-            AnimatedVisibility((selected && label != null)) {
-                styledLabel()
-            }
+//            AnimatedVisibility((selected && label != null)) {
+//                styledLabel()
+//            }
         }
     }
 }
