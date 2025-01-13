@@ -43,7 +43,9 @@ fun PzRoundedImage(
         contentAlignment = Alignment.Center
     ) {
         Image(
-            modifier = Modifier.fillMaxSize().clip(RoundedCornerShape(Theme.radius.medium)),
+            modifier = Modifier
+                .fillMaxSize()
+                .clip(RoundedCornerShape(Theme.radius.large)),
             painter = painter,
             contentDescription = "",
             alignment = Alignment.Center,
@@ -52,7 +54,8 @@ fun PzRoundedImage(
         if (editPainter != painter) {
             Box(
                 modifier = Modifier
-                    .fillMaxSize().clip(RoundedCornerShape(Theme.radius.medium))
+                    .fillMaxSize()
+                    .clip(RoundedCornerShape(Theme.radius.medium))
                     .background(
                         Color.Black.copy(alpha = 0.4f),
                         shape = MaterialTheme.shapes.large
@@ -121,7 +124,8 @@ fun PzRoundedImage(
             contentAlignment = Alignment.Center
         ) {
             Image(
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier
+                    .fillMaxSize()
                     .clip(RoundedCornerShape(Theme.radius.medium)),
                 bitmap = bitmap,
                 contentDescription = "",
