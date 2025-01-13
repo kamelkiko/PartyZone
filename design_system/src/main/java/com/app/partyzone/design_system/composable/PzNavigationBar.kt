@@ -1,6 +1,5 @@
 package com.app.partyzone.design_system.composable
 
-import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -15,14 +14,17 @@ import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.material3.Surface
 import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.draw.drawWithContent
+import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.positionInRoot
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -31,6 +33,7 @@ import com.app.partyzone.design_system.theme.gradientColors
 
 @Composable
 fun PzNavigationBar(
+    xOffsetAnimated: Float,
     modifier: Modifier = Modifier,
     navigationBarHeight: Dp = 64.dp,
     backgroundColor: Color = Theme.colors.primary,
@@ -38,6 +41,7 @@ fun PzNavigationBar(
     topBorder: Dp = 1.dp,
     borderColor: Color = Theme.colors.divider,
     horizontalArrangement: Arrangement.Horizontal = Arrangement.SpaceBetween,
+    indicatorWidth: Dp = 40.dp,
     content: @Composable RowScope.() -> Unit,
 ) {
     Surface(
@@ -46,10 +50,24 @@ fun PzNavigationBar(
         shadowElevation = 0.dp,
         modifier = modifier
     ) {
-        Row(
+        Box(
             Modifier
                 .fillMaxWidth()
                 .height(navigationBarHeight)
+                .drawTopIndicator(xOffsetAnimated, indicatorWidth, 2.dp)
+//                .drawWithCache {
+//                    onDrawWithContent {
+//                        drawContent()
+//                        // Draw the indicator
+//                        if (!xOffsetAnimated.isNaN()) {
+//                            drawRect(
+//                                color = indicatorColor,
+//                                topLeft = Offset(xOffsetAnimated, size.height - 4.dp.toPx()),
+//                                size = Size(indicatorWidth.toPx(), 4.dp.toPx()),
+//                            )
+//                        }
+//                    }
+//                }
                 .selectableGroup()
                 .drawBehind {
                     drawRect(
@@ -58,9 +76,15 @@ fun PzNavigationBar(
                         size = size.copy(height = topBorder.toPx()),
                     )
                 },
-            horizontalArrangement = horizontalArrangement,
-            content = content
-        )
+        ) {
+            Row(
+                Modifier
+                    .fillMaxWidth()
+                    .height(navigationBarHeight),
+                horizontalArrangement = horizontalArrangement,
+                content = content
+            )
+        }
     }
 }
 
@@ -72,6 +96,7 @@ fun RowScope.PzNavigationBarItem(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
+    onPositioned: (Offset) -> Unit // Callback to update the indicator position
 ) {
     val styledIcon = @Composable {
         val iconColor =
@@ -83,22 +108,6 @@ fun RowScope.PzNavigationBarItem(
             )
         icon(iconColor)
     }
-
-//    val styledLabel = @Composable {
-//        val textColor =
-//            if (selected) Brush.horizontalGradient(gradientColors) else Brush.linearGradient(
-//                colors = listOf(
-//                    Theme.colors.contentPrimary,
-//                    Theme.colors.contentPrimary
-//                )
-//            )
-//
-//        val style =
-//            Theme.typography.caption.copy(brush = textColor)
-//        label?.let {
-//            it(style)
-//        }
-//    }
 
     Box(
         modifier
@@ -113,6 +122,13 @@ fun RowScope.PzNavigationBarItem(
             .selectableGroup()
             .fillMaxHeight()
             .weight(1f)
+            .onGloballyPositioned { layoutCoordinates ->
+                if (selected) {
+                    // Calculate the center position of the item for the indicator
+                    val position = layoutCoordinates.positionInRoot()
+                    onPositioned(position)
+                }
+            }
     ) {
         Column(
             modifier = modifier.align(Alignment.Center),
@@ -120,9 +136,23 @@ fun RowScope.PzNavigationBarItem(
             verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
             styledIcon()
-//            AnimatedVisibility((selected && label != null)) {
-//                styledLabel()
-//            }
         }
     }
 }
+
+@Composable
+private fun Modifier.drawTopIndicator(
+    xOffset: Float,
+    indicatorWidth: Dp = 40.dp,
+    indicatorHeight: Dp = 2.dp,
+): Modifier = then(
+    Modifier.drawWithContent {
+        drawContent()
+        drawRoundRect(
+            brush = Brush.horizontalGradient(gradientColors),
+            topLeft = Offset(xOffset, 0f),
+            size = size.copy(width = indicatorWidth.toPx(), height = indicatorHeight.toPx()),
+            cornerRadius = CornerRadius(indicatorHeight.toPx() / 2, indicatorHeight.toPx() / 2)
+        )
+    }
+)

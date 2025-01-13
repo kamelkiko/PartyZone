@@ -4,9 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -22,9 +20,7 @@ import com.app.partyzone.seller.ui.util.LocalNavigationProvider
 import kotlinx.coroutines.delay
 
 @Composable
-fun SplashScreen(
-    innerPadding: PaddingValues,
-) {
+fun SplashScreen() {
     val navController = LocalNavigationProvider.current
 
     LaunchedEffect(Unit) {
@@ -35,8 +31,7 @@ fun SplashScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Theme.colors.primary)
-            .padding(innerPadding),
+            .background(Theme.colors.primary),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {

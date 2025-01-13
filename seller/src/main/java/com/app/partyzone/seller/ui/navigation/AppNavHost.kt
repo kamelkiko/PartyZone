@@ -1,9 +1,13 @@
 package com.app.partyzone.seller.ui.navigation
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.app.partyzone.design_system.theme.Theme
 import com.app.partyzone.seller.ui.screen.auth.login.LoginScreen
 import com.app.partyzone.seller.ui.screen.auth.signup.SignupScreen
 import com.app.partyzone.seller.ui.screen.favourite.FavouriteScreen
@@ -22,50 +26,53 @@ fun AppNavHost(innerPadding: PaddingValues) {
     val navController = LocalNavigationProvider.current
     NavHost(
         navController = navController,
-        startDestination = Screen.Home
+        startDestination = Screen.Home,
+        modifier = Modifier
+            .background(Theme.colors.primary)
+            .padding(paddingValues = innerPadding)
     ) {
         composable<Screen.Splash> {
-            SplashScreen(innerPadding = innerPadding)
+            SplashScreen()
         }
 
         composable<Screen.Login> {
-            LoginScreen(innerPadding = innerPadding)
+            LoginScreen()
         }
 
         composable<Screen.Signup> {
-            SignupScreen(innerPadding = innerPadding)
+            SignupScreen()
         }
 
         composable<Screen.Onboarding> {
-            OnboardingScreen(innerPadding = innerPadding)
+            OnboardingScreen()
         }
 
         composable<Screen.Home> {
-            HomeScreen(innerPadding = innerPadding)
+            HomeScreen()
         }
 
         composable<Screen.Favourite> {
-            FavouriteScreen(innerPadding = innerPadding)
+            FavouriteScreen()
         }
 
         composable<Screen.Party> {
-            PartyScreen(innerPadding = innerPadding)
+            PartyScreen()
         }
 
         composable<Screen.Setting> {
-            SettingScreen(innerPadding = innerPadding)
+            SettingScreen()
         }
 
         composable<Screen.Profile> {
-            ProfileScreen(innerPadding = innerPadding)
+            ProfileScreen()
         }
 
         composable<Screen.Search> {
-            SearchScreen(innerPadding = innerPadding)
+            SearchScreen()
         }
 
         composable<Screen.Notification> {
-            NotificationScreen(innerPadding = innerPadding)
+            NotificationScreen()
         }
     }
 }
