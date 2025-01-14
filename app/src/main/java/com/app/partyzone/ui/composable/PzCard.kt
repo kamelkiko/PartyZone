@@ -1,7 +1,9 @@
 package com.app.partyzone.ui.composable
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,7 +15,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -30,10 +31,14 @@ import com.app.partyzone.design_system.composable.PzRoundedImage
 import com.app.partyzone.design_system.theme.Theme
 import com.app.partyzone.design_system.theme.brush
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PzCard(
     modifier: Modifier = Modifier,
+    name: String,
+    location: String,
+    imageUrl: String?,
+    price: Double?,
+    onClick: () -> Unit,
 ) {
     Row(
         modifier = modifier
@@ -42,7 +47,8 @@ fun PzCard(
             .border(1.dp, Theme.colors.contentBorder, RoundedCornerShape(Theme.radius.large))
             .clip(RoundedCornerShape(Theme.radius.large))
             .background(Theme.colors.primary, RoundedCornerShape(Theme.radius.large))
-            .padding(16.dp),
+            .padding(16.dp)
+            .clickable { onClick() },
         verticalAlignment = Alignment.CenterVertically,
     ) {
         PzRoundedImage(
@@ -55,7 +61,7 @@ fun PzCard(
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             Text(
-                text = "Dance party at the top of the town - 2022", // seller name
+                text = name,
                 color = Theme.colors.contentPrimary,
                 style = Theme.typography.titleLarge
             )
@@ -71,25 +77,27 @@ fun PzCard(
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
-                    text = "New York", // location
+                    text = location,
                     color = Theme.colors.contentTertiary,
                     style = Theme.typography.title
                 )
                 Spacer(modifier = Modifier.weight(1f))
-                Box(
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(Theme.radius.large))
-                        .background(
-                            color = Color(0xFFFB0160).copy(alpha = 0.1f),
-                            RoundedCornerShape(Theme.radius.large)
+                AnimatedVisibility(visible = price != null) {
+                    Box(
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(Theme.radius.large))
+                            .background(
+                                color = Color(0xFFFB0160).copy(alpha = 0.1f),
+                                RoundedCornerShape(Theme.radius.large)
+                            )
+                            .padding(horizontal = 8.dp, vertical = 8.dp)
+                    ) {
+                        Text(
+                            text = "$" + price.toString(),
+                            style = Theme.typography.title.copy(brush = brush),
+                            textAlign = TextAlign.Center
                         )
-                        .padding(horizontal = 8.dp, vertical = 8.dp)
-                ) {
-                    Text(
-                        text = "$30.00", // price
-                        style = Theme.typography.title.copy(brush = brush),
-                        textAlign = TextAlign.Center
-                    )
+                    }
                 }
             }
         }

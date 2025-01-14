@@ -1,4 +1,4 @@
-package com.app.partyzone.ui.screen.home
+package com.app.partyzone.ui.screen.favourite
 
 import com.app.partyzone.core.domain.repository.UserRepository
 import com.app.partyzone.ui.base.BaseViewModel
@@ -7,27 +7,33 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class HomeViewModel @Inject constructor(
+class FavouriteViewModel @Inject constructor(
     private val userRepository: UserRepository,
-) : BaseViewModel<HomeState, HomeEffect>(HomeState()) {
+) : BaseViewModel<FavouriteState, FavouriteEffect>(FavouriteState()) {
     init {
-        fetchUser()
+        fetchFavourites()
     }
 
-    private fun fetchUser() {
-        updateState { it.copy(isLoading = true, error = null, userState = UserState()) }
+    private fun fetchFavourites() {
+        updateState { it.copy(isLoading = true, error = null, favouriteState = emptyList()) }
         tryToExecute(
-            function = { userRepository.getCurrentUser() },
-            onSuccess = { user ->
+            function = { userRepository.getFavorites() },
+            onSuccess = { favourite ->
                 updateState {
                     it.copy(
                         isLoading = false,
-                        userState = UserState(
-                            id = user.id,
-                            name = user.name,
-                            email = user.email,
-                            photoUrl = user.photoUrl,
-                        ),
+                        favouriteState = favourite.map { item ->
+                            FavouriteItemState(
+                                id = item.id,
+                                name = item.name,
+                                location = item.location,
+                                imageUrl = item.imageUrl,
+                                price = item.price,
+                                userId = item.userId,
+                                itemId = item.itemId,
+                                type = item.type
+                            )
+                        },
                         error = null
                     )
                 }
@@ -79,14 +85,10 @@ class HomeViewModel @Inject constructor(
     }
 
     fun onClickRetry() {
-        fetchUser()
+        fetchFavourites()
     }
 
-    fun onClickNotification() {
-        sendNewEffect(HomeEffect.NavigateToNotification)
-    }
-
-    fun onClickSearch() {
-        sendNewEffect(HomeEffect.NavigateToSearch)
+    fun onClickFavouriteItem(id: String, type: String) {
+        sendNewEffect(FavouriteEffect.NavigateToDetails(id, type))
     }
 }

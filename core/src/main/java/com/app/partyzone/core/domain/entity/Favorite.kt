@@ -7,6 +7,6 @@ data class Favorite(
     val itemId: String,
     val name: String,
     val location: String,
-    val imageUrl: String,
+    val imageUrl: String? = null,
     val price: Double? = null
 )

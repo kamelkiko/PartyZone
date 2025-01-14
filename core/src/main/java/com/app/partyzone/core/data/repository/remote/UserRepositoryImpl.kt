@@ -76,7 +76,7 @@ class UserRepositoryImpl @Inject constructor(
                     name = it.get("name").toString(),
                     location = it.get("location").toString(),
                     imageUrl = it.get("imageUrl").toString(),
-                    price = it.get("price") as Double?
+                    price = it.get("price").toString().toDoubleOrNull()
                 )
             )
         }
