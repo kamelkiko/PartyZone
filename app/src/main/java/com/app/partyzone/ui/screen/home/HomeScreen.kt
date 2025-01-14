@@ -67,10 +67,19 @@ fun HomeScreen(homeViewModel: HomeViewModel = hiltViewModel()) {
             .background(Theme.colors.primary)
     ) {
         AnimatedVisibility(visible = state.isLoading) {
-            CircularProgressIndicator(
-                modifier = Modifier
-                    .align(Alignment.Center)
-            )
+            Column(
+                Modifier
+                    .fillMaxSize()
+                    .align(Alignment.Center),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                CircularProgressIndicator(
+                    modifier = Modifier
+                        .align(Alignment.CenterHorizontally),
+                    color = Theme.colors.contentPrimary,
+                )
+            }
         }
         AnimatedVisibility(visible = state.isLoading.not() && state.error != null) {
             ErrorView(
