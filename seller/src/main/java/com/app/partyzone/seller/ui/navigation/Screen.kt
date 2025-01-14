@@ -19,12 +19,6 @@ sealed interface Screen {
     data object Home : Screen
 
     @Serializable
-    data object Search : Screen
-
-    @Serializable
-    data object Favourite : Screen
-
-    @Serializable
     data object Party : Screen
 
     @Serializable

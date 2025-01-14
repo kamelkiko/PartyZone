@@ -56,7 +56,7 @@ class MainActivity : ComponentActivity() {
                     )
                     val indicatorWidth = 40.dp
                     val density = LocalDensity.current
-                    val indicatorWidthPx = with(density) { 40.dp.toPx() }
+                    val indicatorWidthPx = with(density) { 48.dp.toPx() }
                     val iconSizePx = with(density) { 24.dp.toPx() }
                     Scaffold(
                         modifier = Modifier.fillMaxSize(),

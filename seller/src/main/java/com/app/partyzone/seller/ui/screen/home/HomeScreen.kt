@@ -145,44 +145,6 @@ private fun HomeContent(
             }
         }
         Spacer(modifier = Modifier.height(32.dp))
-//        Row(
-//            modifier = Modifier
-//                .fillMaxWidth()
-//                .height(56.dp)
-//                .padding(horizontal = 16.dp)
-//                .border(1.dp, Theme.colors.contentBorder, RoundedCornerShape(Theme.radius.large))
-//                .clip(RoundedCornerShape(Theme.radius.large))
-//                .background(Theme.colors.primary, RoundedCornerShape(Theme.radius.large))
-//                .clickable { },
-//            horizontalArrangement = Arrangement.SpaceBetween,
-//            verticalAlignment = Alignment.CenterVertically
-//        ) {
-//            Row {
-//                Spacer(modifier = Modifier.width(16.dp))
-//                Icon(
-//                    painter = painterResource(id = com.app.partyzone.design_system.R.drawable.search_icon),
-//                    contentDescription = stringResource(R.string.search_icon),
-//                    tint = Theme.colors.contentTertiary,
-//                    modifier = Modifier
-//                        .size(24.dp)
-//                )
-//                Spacer(modifier = Modifier.width(8.dp))
-//                Text(
-//                    text = stringResource(R.string.search),
-//                    color = Theme.colors.contentTertiary,
-//                    style = Theme.typography.title
-//                )
-//            }
-//            Icon(
-//                painter = painterResource(id = com.app.partyzone.design_system.R.drawable.filter_icon),
-//                contentDescription = stringResource(R.string.search_icon),
-//                tint = Theme.colors.contentPrimary,
-//                modifier = Modifier
-//                    .padding(end = 16.dp)
-//                    .size(24.dp)
-//                    .clickable { }
-//            )
-//        }
         Spacer(modifier = Modifier.height(24.dp))
         Spacer(modifier = Modifier.width(16.dp))
         PzChip(label = "Music", isSelected = false, onClick = {})
