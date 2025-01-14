@@ -73,6 +73,16 @@ class SellerRepositoryImpl @Inject constructor(
                 )
             )
         }
+        if (notifications.isNotEmpty()) {
+            val batch = firestore.batch()
+            for (notification in notifications) {
+                val notificationRef = FirebaseFirestore.getInstance()
+                    .collection("notifications")
+                    .document(notification.id)
+                batch.update(notificationRef, "isRead", true)
+            }
+            batch.commit().await()
+        }
         return notifications
     }
 
@@ -81,5 +91,14 @@ class SellerRepositoryImpl @Inject constructor(
             .document(notification.id)
             .set(notification.copy(userId = firebaseAuth.currentUser?.uid ?: ""))
             .await()
+    }
+
+    override suspend fun hasNotification(): Boolean {
+        return firestore.collection("notifications")
+            .whereEqualTo("sellerId", firebaseAuth.currentUser?.uid ?: "")
+            .get()
+            .await().any {
+                it.get("isRead").toString().toBoolean()
+            }
     }
 }

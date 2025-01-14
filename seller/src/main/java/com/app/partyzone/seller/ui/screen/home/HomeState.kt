@@ -6,6 +6,7 @@ import javax.annotation.concurrent.Immutable
 data class HomeState(
     val sellerState: SellerState = SellerState(),
     val isLoading: Boolean = false,
+    val hasNotifications: Boolean = false,
     val error: String? = null,
 )
 

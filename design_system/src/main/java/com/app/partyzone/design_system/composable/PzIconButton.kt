@@ -25,6 +25,7 @@ fun PzIconButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     height: Int = 56,
+    tint: Color = Theme.colors.contentPrimary,
     gapBetweenIconAndContent: Int = 8,
     content: @Composable (() -> Unit),
 ) {
@@ -47,7 +48,7 @@ fun PzIconButton(
             horizontalArrangement = Arrangement.spacedBy(gapBetweenIconAndContent.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Icon(painter = painter, contentDescription = "", tint = Theme.colors.contentPrimary)
+            Icon(painter = painter, contentDescription = "", tint = tint)
             content()
         }
     }

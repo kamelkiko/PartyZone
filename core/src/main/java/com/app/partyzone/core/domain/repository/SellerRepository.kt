@@ -9,4 +9,5 @@ interface SellerRepository {
     suspend fun updateCurrentSeller(seller: Seller)
     suspend fun getNotifications(): List<Notification>
     suspend fun sendNotification(notification: Notification)
+    suspend fun hasNotification(): Boolean
 }

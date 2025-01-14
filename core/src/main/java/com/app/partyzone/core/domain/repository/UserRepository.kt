@@ -13,4 +13,5 @@ interface UserRepository {
     suspend fun getFavorites(): List<Favorite>
     suspend fun getNotifications(): List<Notification>
     suspend fun sendNotification(notification: Notification)
+    suspend fun hasNotification(): Boolean
 }

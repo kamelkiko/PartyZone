@@ -24,6 +24,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.graphics.BlendMode
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -84,7 +85,11 @@ fun HomeScreen(homeViewModel: HomeViewModel = hiltViewModel()) {
             )
         }
         AnimatedVisibility(visible = state.isLoading.not() && state.error.isNullOrEmpty()) {
-            HomeContent(name = state.sellerState.name, homeViewModel::onClickNotification)
+            HomeContent(
+                name = state.sellerState.name,
+                onClickNotification = homeViewModel::onClickNotification,
+                hasNotifications = state.hasNotifications,
+            )
         }
     }
 }
@@ -92,6 +97,7 @@ fun HomeScreen(homeViewModel: HomeViewModel = hiltViewModel()) {
 @Composable
 private fun HomeContent(
     name: String,
+    hasNotifications: Boolean,
     onClickNotification: () -> Unit
 ) {
     Column(
@@ -140,7 +146,8 @@ private fun HomeContent(
             }
             PzIconButton(
                 painter = painterResource(id = com.app.partyzone.design_system.R.drawable.notification_icon),
-                onClick = onClickNotification
+                onClick = onClickNotification,
+                tint = if (hasNotifications) Color(0xFFFB0160) else Theme.colors.contentPrimary
             ) {
             }
         }

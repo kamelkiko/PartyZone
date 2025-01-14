@@ -12,6 +12,24 @@ class HomeViewModel @Inject constructor(
 ) : BaseViewModel<HomeState, HomeEffect>(HomeState()) {
     init {
         fetchUser()
+        hasNotifications()
+    }
+
+    private fun hasNotifications() {
+        updateState { it.copy(isLoading = true, error = null, hasNotifications = false) }
+        tryToExecute(
+            function = { sellerRepository.hasNotification() },
+            onSuccess = { hasNotification ->
+                updateState {
+                    it.copy(
+                        isLoading = true,
+                        error = null,
+                        hasNotifications = hasNotification
+                    )
+                }
+            },
+            onError = ::handleError
+        )
     }
 
     private fun fetchUser() {

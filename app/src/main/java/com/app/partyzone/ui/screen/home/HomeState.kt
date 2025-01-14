@@ -7,6 +7,7 @@ data class HomeState(
     val userState: UserState = UserState(),
     val isLoading: Boolean = false,
     val error: String? = null,
+    val hasNotifications: Boolean = false,
 )
 
 @Immutable
