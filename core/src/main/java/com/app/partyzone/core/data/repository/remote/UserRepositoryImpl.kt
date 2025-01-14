@@ -156,7 +156,7 @@ class UserRepositoryImpl @Inject constructor(
             .whereEqualTo("userId", firebaseAuth.currentUser?.uid ?: "")
             .get()
             .await().any {
-                it.get("isRead").toString().toBoolean()
+                it.get("isRead").toString().toBoolean().not()
             }
     }
 }

@@ -98,7 +98,7 @@ class SellerRepositoryImpl @Inject constructor(
             .whereEqualTo("sellerId", firebaseAuth.currentUser?.uid ?: "")
             .get()
             .await().any {
-                it.get("isRead").toString().toBoolean()
+                it.get("isRead").toString().toBoolean().not()
             }
     }
 }

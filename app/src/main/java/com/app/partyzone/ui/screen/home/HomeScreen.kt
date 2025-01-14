@@ -34,6 +34,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
 import com.app.partyzone.R
 import com.app.partyzone.design_system.composable.PzChip
 import com.app.partyzone.design_system.composable.PzIconButton
@@ -41,11 +42,17 @@ import com.app.partyzone.design_system.theme.Theme
 import com.app.partyzone.design_system.theme.brush
 import com.app.partyzone.ui.composable.ErrorView
 import com.app.partyzone.ui.navigation.Screen
+import com.app.partyzone.ui.util.ComposableLifecycle
 import com.app.partyzone.ui.util.EventHandler
 
 @Composable
 fun HomeScreen(homeViewModel: HomeViewModel = hiltViewModel()) {
     val state by homeViewModel.state.collectAsState()
+
+    ComposableLifecycle { _, event ->
+        if (event == Lifecycle.Event.ON_RESUME)
+            homeViewModel.hasNotifications()
+    }
 
     EventHandler(effects = homeViewModel.effect) { effect, navController ->
         when (effect) {

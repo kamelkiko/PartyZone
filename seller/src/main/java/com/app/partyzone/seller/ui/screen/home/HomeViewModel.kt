@@ -15,20 +15,18 @@ class HomeViewModel @Inject constructor(
         hasNotifications()
     }
 
-    private fun hasNotifications() {
-        updateState { it.copy(isLoading = true, error = null, hasNotifications = false) }
+    fun hasNotifications() {
+        updateState { it.copy(hasNotifications = false) }
         tryToExecute(
             function = { sellerRepository.hasNotification() },
             onSuccess = { hasNotification ->
                 updateState {
                     it.copy(
-                        isLoading = true,
-                        error = null,
                         hasNotifications = hasNotification
                     )
                 }
             },
-            onError = ::handleError
+            onError = {}
         )
     }
 
