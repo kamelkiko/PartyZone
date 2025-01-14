@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -21,10 +22,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.airbnb.lottie.compose.LottieAnimation
+import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.animateLottieCompositionAsState
+import com.airbnb.lottie.compose.rememberLottieComposition
 import com.app.partyzone.R
 import com.app.partyzone.design_system.theme.Theme
 import com.app.partyzone.ui.composable.ErrorView
-import com.app.partyzone.ui.composable.PzCard
+import com.app.partyzone.ui.screen.favourite.composable.PzFavouriteCard
 import com.app.partyzone.ui.util.EventHandler
 
 @Composable
@@ -86,6 +91,9 @@ private fun FavouriteContent(
     favouriteState: List<FavouriteItemState>,
     onFavouriteItemClick: (String, String) -> Unit,
 ) {
+    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.empty_anim))
+    val progress by animateLottieCompositionAsState(composition, iterations = Int.MAX_VALUE)
+
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
@@ -103,8 +111,26 @@ private fun FavouriteContent(
             )
         }
 
+        item {
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                AnimatedVisibility(favouriteState.isEmpty()) {
+                    LottieAnimation(
+                        composition = composition,
+                        progress = { progress },
+                        modifier = Modifier
+                            .size(256.dp)
+                            .align(Alignment.CenterHorizontally)
+                    )
+                }
+            }
+        }
+
         items(favouriteState) {
-            PzCard(
+            PzFavouriteCard(
                 name = it.name,
                 location = it.location,
                 imageUrl = it.imageUrl,

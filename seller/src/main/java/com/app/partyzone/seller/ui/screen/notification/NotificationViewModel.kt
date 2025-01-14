@@ -1,8 +1,8 @@
-package com.app.partyzone.ui.screen.notification
+package com.app.partyzone.seller.ui.screen.notification
 
 import com.app.partyzone.core.domain.repository.UserRepository
-import com.app.partyzone.ui.base.BaseViewModel
-import com.app.partyzone.ui.base.ErrorState
+import com.app.partyzone.seller.ui.base.BaseViewModel
+import com.app.partyzone.seller.ui.base.ErrorState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -26,7 +26,7 @@ class NotificationViewModel @Inject constructor(
                             NotificationItemState(
                                 id = item.id,
                                 message = item.message,
-                                date = item.date,
+                                date = item.timestamp.toDate().toString(),
                                 isRead = item.isRead,
                                 userId = item.userId,
                                 sellerId = item.sellerId,

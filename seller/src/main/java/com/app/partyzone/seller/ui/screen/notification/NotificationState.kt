@@ -1,4 +1,4 @@
-package com.app.partyzone.ui.screen.notification
+package com.app.partyzone.seller.ui.screen.notification
 
 import javax.annotation.concurrent.Immutable
 

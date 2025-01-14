@@ -4,6 +4,8 @@ import com.app.partyzone.core.domain.entity.Favorite
 import com.app.partyzone.core.domain.entity.Notification
 import com.app.partyzone.core.domain.entity.User
 import com.app.partyzone.core.domain.repository.UserRepository
+import com.app.partyzone.core.domain.util.UnknownErrorException
+import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
@@ -58,7 +60,8 @@ class UserRepositoryImpl @Inject constructor(
             sellerId = favorite.sellerId,
             type = "Favorite",
             message = "A user has added you to their favorites.",
-            userId = firebaseAuth.currentUser?.uid ?: ""
+            userId = "",
+            date = Timestamp.now().toDate().toString()
         )
         sendNotification(notification)
     }
@@ -78,7 +81,8 @@ class UserRepositoryImpl @Inject constructor(
                 .get("sellerId").toString(),
             type = "Unfavorite",
             message = "A user has removed you from their favorites.",
-            userId = firebaseAuth.currentUser?.uid ?: ""
+            userId = "",
+            date = Timestamp.now().toDate().toString()
         )
         sendNotification(notification)
     }
@@ -105,6 +109,29 @@ class UserRepositoryImpl @Inject constructor(
             )
         }
         return favorites
+    }
+
+    override suspend fun getNotifications(): List<Notification> {
+        val notifications = mutableListOf<Notification>()
+        val data = firestore.collection("notifications")
+            .whereEqualTo("userId", firebaseAuth.currentUser?.uid ?: "")
+            .get()
+            .await()
+        data.forEach {
+            notifications.add(
+                Notification(
+                    id = it.get("id").toString(),
+                    userId = it.get("userId").toString(),
+                    sellerId = it.get("sellerId").toString(),
+                    type = it.get("type").toString(),
+                    message = it.get("message").toString(),
+                    isRead = it.get("isRead").toString().toBoolean(),
+                    date = it.getTimestamp("timestamp")?.toDate()?.toString()
+                        ?: throw UnknownErrorException("Timestamp is null")
+                )
+            )
+        }
+        return notifications
     }
 
     override suspend fun sendNotification(notification: Notification) {

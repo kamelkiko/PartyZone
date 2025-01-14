@@ -11,5 +11,6 @@ interface UserRepository {
     suspend fun addToFavorites(favorite: Favorite)
     suspend fun removeFromFavorites(favoriteId: String)
     suspend fun getFavorites(): List<Favorite>
+    suspend fun getNotifications(): List<Notification>
     suspend fun sendNotification(notification: Notification)
 }
