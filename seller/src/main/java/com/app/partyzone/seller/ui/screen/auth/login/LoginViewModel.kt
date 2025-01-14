@@ -1,16 +1,16 @@
-package com.app.partyzone.ui.screen.auth.signup
+package com.app.partyzone.seller.ui.screen.auth.login
 
 import com.app.partyzone.core.domain.repository.AuthRepository
 import com.app.partyzone.core.util.isEmptyOrBlank
-import com.app.partyzone.ui.base.BaseViewModel
-import com.app.partyzone.ui.base.ErrorState
+import com.app.partyzone.seller.ui.base.BaseViewModel
+import com.app.partyzone.seller.ui.base.ErrorState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class SignupViewModel @Inject constructor(
-    private val authRepository: AuthRepository
-) : BaseViewModel<SignupState, SignupEffect>(SignupState()) {
+class LoginViewModel @Inject constructor(
+    private val authRepository: AuthRepository,
+) : BaseViewModel<LoginState, LoginEffect>(LoginState()) {
 
     fun onEmailChanged(email: String) {
         updateState {
@@ -24,17 +24,11 @@ class SignupViewModel @Inject constructor(
         }
     }
 
-    fun onUserNameChanged(userName: String) {
-        updateState {
-            it.copy(userName = userName)
-        }
+    fun onSignUp() {
+        sendNewEffect(LoginEffect.NavigateToSignup)
     }
 
-    fun onLogIn() {
-        sendNewEffect(SignupEffect.NavigateToLogin)
-    }
-
-    fun onSingUp() {
+    fun onLogin() {
         updateState {
             it.copy(isLoading = true, error = null)
         }
@@ -43,15 +37,6 @@ class SignupViewModel @Inject constructor(
                 it.copy(
                     isLoading = false,
                     error = "Please enter your email"
-                )
-            }
-            return
-        }
-        if (state.value.userName.isEmptyOrBlank()) {
-            updateState {
-                it.copy(
-                    isLoading = false,
-                    error = "Please enter your name"
                 )
             }
             return
@@ -67,20 +52,18 @@ class SignupViewModel @Inject constructor(
         }
         tryToExecute(
             function = {
-                authRepository.signupUser(
-                    email = state.value.email.trim(),
-                    password = state.value.password.trim(),
-                    userName = state.value.userName
+                authRepository.loginSeller(
+                    email = state.value.email,
+                    password = state.value.password
                 )
             },
             onSuccess = {
                 updateState { it.copy(isLoading = false, error = null) }
-                sendNewEffect(SignupEffect.NavigateToHome)
+                sendNewEffect(LoginEffect.NavigateToHome)
             },
             onError = ::handleError
         )
     }
-
 
     private fun handleError(error: ErrorState) {
         when (error) {
@@ -111,7 +94,7 @@ class SignupViewModel @Inject constructor(
                 }
             }
 
-            is ErrorState.UserAlreadyExists -> {
+            is ErrorState.UserNotFound -> {
                 updateState {
                     it.copy(
                         isLoading = false,

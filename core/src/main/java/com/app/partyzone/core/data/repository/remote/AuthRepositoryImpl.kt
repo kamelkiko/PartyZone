@@ -9,7 +9,7 @@ import javax.inject.Inject
 class AuthRepositoryImpl @Inject constructor(
     private val firebaseAuth: FirebaseAuth,
 ) : AuthRepository {
-    override suspend fun login(email: String, password: String): Boolean {
+    override suspend fun loginUser(email: String, password: String): Boolean {
         return try {
             firebaseAuth.signInWithEmailAndPassword(email, password).await()
             true
@@ -18,7 +18,30 @@ class AuthRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun signup(email: String, password: String, userName: String): Boolean {
+    override suspend fun loginSeller(email: String, password: String): Boolean {
+        return try {
+            firebaseAuth.signInWithEmailAndPassword(email, password).await()
+            true
+        } catch (e: Exception) {
+            throw Exception("Error logging in: ${e.message}")
+        }
+    }
+
+    override suspend fun signupUser(email: String, password: String, userName: String): Boolean {
+        return try {
+            firebaseAuth.createUserWithEmailAndPassword(email, password).await()
+            firebaseAuth.currentUser?.updateProfile(
+                UserProfileChangeRequest.Builder()
+                    .setDisplayName(userName)
+                    .build()
+            )?.await()
+            true
+        } catch (e: Exception) {
+            throw Exception("Error sign up: ${e.message}")
+        }
+    }
+
+    override suspend fun signupSeller(email: String, password: String, userName: String): Boolean {
         return try {
             firebaseAuth.createUserWithEmailAndPassword(email, password).await()
             firebaseAuth.currentUser?.updateProfile(

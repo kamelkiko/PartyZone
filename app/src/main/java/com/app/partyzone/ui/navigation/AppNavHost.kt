@@ -1,4 +1,4 @@
-package com.app.partyzone.seller.ui.navigation
+package com.app.partyzone.ui.navigation
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.PaddingValues
@@ -8,18 +8,18 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.app.partyzone.design_system.theme.Theme
-import com.app.partyzone.seller.ui.screen.auth.login.LoginScreen
-import com.app.partyzone.seller.ui.screen.auth.signup.SignupScreen
-import com.app.partyzone.seller.ui.screen.favourite.FavouriteScreen
-import com.app.partyzone.seller.ui.screen.home.HomeScreen
-import com.app.partyzone.seller.ui.screen.notification.NotificationScreen
-import com.app.partyzone.seller.ui.screen.onboarding.OnboardingScreen
-import com.app.partyzone.seller.ui.screen.party.PartyScreen
-import com.app.partyzone.seller.ui.screen.profile.ProfileScreen
-import com.app.partyzone.seller.ui.screen.search.SearchScreen
-import com.app.partyzone.seller.ui.screen.setting.SettingScreen
-import com.app.partyzone.seller.ui.screen.splash.SplashScreen
-import com.app.partyzone.seller.ui.util.LocalNavigationProvider
+import com.app.partyzone.ui.screen.auth.login.LoginScreen
+import com.app.partyzone.ui.screen.auth.signup.SignupScreen
+import com.app.partyzone.ui.screen.favourite.FavouriteScreen
+import com.app.partyzone.ui.screen.home.HomeScreen
+import com.app.partyzone.ui.screen.notification.NotificationScreen
+import com.app.partyzone.ui.screen.onboarding.OnboardingScreen
+import com.app.partyzone.ui.screen.party.PartyScreen
+import com.app.partyzone.ui.screen.profile.ProfileScreen
+import com.app.partyzone.ui.screen.search.SearchScreen
+import com.app.partyzone.ui.screen.setting.SettingScreen
+import com.app.partyzone.ui.screen.splash.SplashScreen
+import com.app.partyzone.ui.util.LocalNavigationProvider
 
 @Composable
 fun AppNavHost(innerPadding: PaddingValues) {

@@ -1,9 +1,9 @@
-package com.app.partyzone.ui.screen.auth.signup
+package com.app.partyzone.seller.ui.screen.auth.signup
 
 import com.app.partyzone.core.domain.repository.AuthRepository
 import com.app.partyzone.core.util.isEmptyOrBlank
-import com.app.partyzone.ui.base.BaseViewModel
-import com.app.partyzone.ui.base.ErrorState
+import com.app.partyzone.seller.ui.base.BaseViewModel
+import com.app.partyzone.seller.ui.base.ErrorState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -67,7 +67,7 @@ class SignupViewModel @Inject constructor(
         }
         tryToExecute(
             function = {
-                authRepository.signupUser(
+                authRepository.signupSeller(
                     email = state.value.email.trim(),
                     password = state.value.password.trim(),
                     userName = state.value.userName

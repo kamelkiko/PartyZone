@@ -10,19 +10,13 @@ import javax.inject.Inject
 
 class UserPreferencesRepository @Inject constructor(private val dataStore: DataStore<Preferences>) :
     IUserPreferencesRepository {
-    override suspend fun setUserLoggedIn() {
+    override suspend fun setUserFirstTimeUseApp() {
         dataStore.edit { preferences ->
-            preferences[PreferencesKeys.IsLoggedIn] = true
+            preferences[PreferencesKeys.isFirstTimeOpenApp] = true
         }
     }
 
-    override suspend fun setUserLoggedOut() {
-        dataStore.edit { preferences ->
-            preferences[PreferencesKeys.IsLoggedIn] = false
-        }
-    }
-
-    override suspend fun getUserIsLoggedIn(): Boolean {
-        return dataStore.get()[PreferencesKeys.IsLoggedIn] ?: false
+    override suspend fun getUserIsFirstTimeOpenApp(): Boolean {
+        return dataStore.get()[PreferencesKeys.isFirstTimeOpenApp] ?: false
     }
 }

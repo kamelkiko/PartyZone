@@ -1,9 +1,7 @@
 package com.app.partyzone.core.di
 
 import com.app.partyzone.core.data.repository.preferences.UserPreferencesRepository
-import com.app.partyzone.core.data.repository.remote.AuthGoogleRepoImpl
 import com.app.partyzone.core.data.repository.remote.AuthRepositoryImpl
-import com.app.partyzone.core.domain.repository.AuthGoogleRepository
 import com.app.partyzone.core.domain.repository.AuthRepository
 import com.app.partyzone.core.domain.repository.IUserPreferencesRepository
 import dagger.Binds
@@ -27,10 +25,4 @@ abstract class RepositoryModule {
     abstract fun bindAuthRepository(
         authRepository: AuthRepositoryImpl
     ): AuthRepository
-
-    @Singleton
-    @Binds
-    abstract fun bindAuthGoogleRepository(
-        authRepository: AuthGoogleRepoImpl
-    ): AuthGoogleRepository
 }

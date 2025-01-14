@@ -3,5 +3,5 @@ package com.app.partyzone.core.data.util
 import androidx.datastore.preferences.core.booleanPreferencesKey
 
 object PreferencesKeys {
-    val IsLoggedIn = booleanPreferencesKey("is_logged_in")
+    val isFirstTimeOpenApp = booleanPreferencesKey("is_first_time_open_app")
 }

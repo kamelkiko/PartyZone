@@ -1,5 +1,6 @@
 package com.app.partyzone.seller.ui.screen.auth.login
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -17,43 +18,81 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.app.partyzone.core.util.isNotEmptyAndBlank
 import com.app.partyzone.design_system.composable.PzButton
 import com.app.partyzone.design_system.composable.PzTextField
 import com.app.partyzone.design_system.theme.Theme
 import com.app.partyzone.design_system.theme.brush
 import com.app.partyzone.seller.R
 import com.app.partyzone.seller.ui.navigation.Screen
-import com.app.partyzone.seller.ui.util.LocalNavigationProvider
+import com.app.partyzone.seller.ui.util.EventHandler
 
 @Composable
-fun LoginScreen() {
+fun LoginScreen(loginViewModel: LoginViewModel = hiltViewModel()) {
+    val state by loginViewModel.state.collectAsState()
+    val context = LocalContext.current
+
+    EventHandler(effects = loginViewModel.effect) { effect, navController ->
+        when (effect) {
+            is LoginEffect.ShowToast -> {
+                Toast.makeText(context, effect.message, Toast.LENGTH_SHORT).show()
+            }
+
+            is LoginEffect.NavigateToHome -> {
+                navController.navigate(Screen.Home) {
+                    popUpTo(Screen.Login) { inclusive = true }
+                }
+            }
+
+            is LoginEffect.NavigateToSignup -> {
+                navController.navigate(Screen.Signup)
+            }
+
+            else -> {}
+        }
+    }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(Theme.colors.primary)
     ) {
-        LoginContent()
+        LoginContent(
+            email = state.email,
+            password = state.password,
+            isLoading = state.isLoading,
+            errorMessage = state.error,
+            onEmailChange = loginViewModel::onEmailChanged,
+            onPasswordChange = loginViewModel::onPasswordChanged,
+            onClickLogin = loginViewModel::onLogin,
+            onClickSignup = loginViewModel::onSignUp,
+        )
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun LoginContent() {
-    var name by remember { mutableStateOf("") }
-    var pass by remember { mutableStateOf("") }
-    val nav = LocalNavigationProvider.current
-
+private fun LoginContent(
+    email: String,
+    password: String,
+    isLoading: Boolean,
+    errorMessage: String?,
+    onEmailChange: (String) -> Unit,
+    onPasswordChange: (String) -> Unit,
+    onClickLogin: () -> Unit,
+    onClickSignup: () -> Unit,
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -93,8 +132,9 @@ private fun LoginContent() {
         Spacer(modifier = Modifier.height(30.dp))
         PzTextField(
             hint = stringResource(R.string.enter_email),
-            text = name,
-            onValueChange = { name = it },
+            text = email,
+            isError = errorMessage.isNullOrEmpty().not(),
+            onValueChange = onEmailChange,
             keyboardType = KeyboardType.Email,
             leadingIcon = {
                 Icon(
@@ -110,8 +150,10 @@ private fun LoginContent() {
         Spacer(modifier = Modifier.height(20.dp))
         PzTextField(
             hint = stringResource(R.string.enter_password),
-            text = pass,
-            onValueChange = { pass = it },
+            text = password,
+            isError = errorMessage.isNullOrEmpty().not(),
+            errorMessage = errorMessage ?: "",
+            onValueChange = onPasswordChange,
             keyboardType = KeyboardType.Password,
             leadingIcon = {
                 Icon(
@@ -127,11 +169,13 @@ private fun LoginContent() {
         Spacer(modifier = Modifier.height(30.dp))
         PzButton(
             title = stringResource(R.string.login),
-            onClick = { },
+            onClick = onClickLogin,
             modifier = Modifier
                 .fillMaxWidth()
                 .height(56.dp)
                 .align(Alignment.CenterHorizontally),
+            isLoading = isLoading,
+            enabled = email.isNotEmptyAndBlank() && password.isNotEmptyAndBlank(),
         )
         Spacer(modifier = Modifier.height(30.dp))
         Row(
@@ -156,7 +200,7 @@ private fun LoginContent() {
                 textAlign = TextAlign.Center,
                 modifier = Modifier
                     .align(Alignment.CenterVertically)
-                    .clickable { nav.navigate(Screen.Signup) }
+                    .clickable { onClickSignup() }
             )
         }
     }
