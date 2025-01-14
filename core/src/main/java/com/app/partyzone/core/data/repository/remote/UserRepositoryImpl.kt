@@ -8,6 +8,9 @@ import com.app.partyzone.core.domain.util.UnknownErrorException
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
 import java.util.UUID
 import javax.inject.Inject
@@ -151,12 +154,25 @@ class UserRepositoryImpl @Inject constructor(
             .await()
     }
 
-    override suspend fun hasNotification(): Boolean {
-        return firestore.collection("notifications")
+    override fun hasNotification(): Flow<Boolean> = callbackFlow {
+        val listener = firestore.collection("notifications")
             .whereEqualTo("userId", firebaseAuth.currentUser?.uid ?: "")
-            .get()
-            .await().any {
-                it.get("isRead").toString().toBoolean().not()
+            .addSnapshotListener { value, error ->
+                if (error != null) {
+                    close(error) // Close the flow with an error
+                    throw UnknownErrorException(error.message.toString())
+                }
+
+                val hasUnreadNotification = value?.any {
+                    it.get("isRead").toString().toBoolean().not()
+                } ?: false
+
+                trySend(hasUnreadNotification) // Emit the result to the flow
             }
+
+        // This block is called when the flow is cancelled or completed
+        awaitClose {
+            listener.remove() // Remove the listener when the flow is no longer needed
+        }
     }
 }

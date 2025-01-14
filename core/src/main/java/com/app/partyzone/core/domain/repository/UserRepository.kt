@@ -3,6 +3,7 @@ package com.app.partyzone.core.domain.repository
 import com.app.partyzone.core.domain.entity.Favorite
 import com.app.partyzone.core.domain.entity.Notification
 import com.app.partyzone.core.domain.entity.User
+import kotlinx.coroutines.flow.Flow
 
 interface UserRepository {
     suspend fun getCurrentUser(): User
@@ -13,5 +14,5 @@ interface UserRepository {
     suspend fun getFavorites(): List<Favorite>
     suspend fun getNotifications(): List<Notification>
     suspend fun sendNotification(notification: Notification)
-    suspend fun hasNotification(): Boolean
+    fun hasNotification(): Flow<Boolean>
 }

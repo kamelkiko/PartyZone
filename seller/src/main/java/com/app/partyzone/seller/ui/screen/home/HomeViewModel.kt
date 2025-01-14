@@ -17,9 +17,9 @@ class HomeViewModel @Inject constructor(
 
     fun hasNotifications() {
         updateState { it.copy(hasNotifications = false) }
-        tryToExecute(
+        tryToCollect(
             function = { sellerRepository.hasNotification() },
-            onSuccess = { hasNotification ->
+            onNewValue = { hasNotification ->
                 updateState {
                     it.copy(
                         hasNotifications = hasNotification
