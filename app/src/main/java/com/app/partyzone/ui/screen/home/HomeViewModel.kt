@@ -87,4 +87,8 @@ class HomeViewModel @Inject constructor(
             }
         }
     }
+
+    fun onClickRetry() {
+        fetchUser()
+    }
 }

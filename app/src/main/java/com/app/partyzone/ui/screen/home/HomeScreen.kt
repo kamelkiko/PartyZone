@@ -1,5 +1,6 @@
 package com.app.partyzone.ui.screen.home
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -14,7 +15,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -35,6 +38,7 @@ import com.app.partyzone.design_system.composable.PzChip
 import com.app.partyzone.design_system.composable.PzIconButton
 import com.app.partyzone.design_system.theme.Theme
 import com.app.partyzone.design_system.theme.brush
+import com.app.partyzone.ui.composable.ErrorView
 import com.app.partyzone.ui.navigation.Screen
 import com.app.partyzone.ui.util.EventHandler
 
@@ -62,7 +66,25 @@ fun HomeScreen(homeViewModel: HomeViewModel = hiltViewModel()) {
             .fillMaxSize()
             .background(Theme.colors.primary)
     ) {
-        HomeContent(name = state.userState.name)
+        AnimatedVisibility(visible = state.isLoading) {
+            CircularProgressIndicator(
+                modifier = Modifier
+                    .align(Alignment.Center)
+            )
+        }
+        AnimatedVisibility(visible = state.isLoading.not() && state.error != null) {
+            ErrorView(
+                error = state.error,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .wrapContentHeight()
+                    .align(Alignment.Center),
+                onClickRetry = homeViewModel::onClickRetry
+            )
+        }
+        AnimatedVisibility(visible = state.isLoading.not() && state.error.isNullOrEmpty()) {
+            HomeContent(name = state.userState.name)
+        }
     }
 }
 
