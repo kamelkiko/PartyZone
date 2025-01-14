@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -27,7 +26,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.app.partyzone.R
-import com.app.partyzone.design_system.composable.PzButton
 import com.app.partyzone.design_system.composable.PzRoundedImage
 import com.app.partyzone.design_system.theme.Theme
 import com.app.partyzone.design_system.theme.brush
@@ -93,13 +91,6 @@ fun PzCard(
                         textAlign = TextAlign.Center
                     )
                 }
-            }
-            Spacer(modifier = Modifier.height(24.dp))
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-            ) {
-                PzButton(title = "Cancel Booking", onClick = { /*TODO*/ })
-                PzButton(title = "View Ticket", onClick = { })
             }
         }
     }
