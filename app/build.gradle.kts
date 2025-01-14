@@ -72,16 +72,6 @@ dependencies {
     implementation(libs.hilt.android)
     ksp(libs.hilt.android.compiler)
 
-    //data store
-    implementation(libs.data.store)
-
-    //firebase
-    implementation(platform(libs.firebase.bom))
-    implementation(libs.firebase.firestore)
-    implementation(libs.firebase.auth)
-    implementation(libs.firebase.storage)
-    implementation(libs.play.services.auth)
-
     //test
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
