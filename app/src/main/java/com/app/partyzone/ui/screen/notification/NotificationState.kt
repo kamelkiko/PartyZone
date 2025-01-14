@@ -1,16 +1,16 @@
-package com.app.partyzone.ui.screen.favourite
+package com.app.partyzone.ui.screen.notification
 
 import javax.annotation.concurrent.Immutable
 
 @Immutable
-data class FavouriteState(
-    val favouriteState: List<FavouriteItemState> = emptyList(),
+data class NotificationState(
+    val favouriteState: List<NotificationItemState> = emptyList(),
     val isLoading: Boolean = false,
     val error: String? = null,
 )
 
 @Immutable
-data class FavouriteItemState(
+data class NotificationItemState(
     val id: String = "",
     val name: String = "",
     val location: String = "",

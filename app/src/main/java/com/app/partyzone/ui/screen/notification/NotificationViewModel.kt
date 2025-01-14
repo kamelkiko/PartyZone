@@ -1,4 +1,4 @@
-package com.app.partyzone.ui.screen.favourite
+package com.app.partyzone.ui.screen.notification
 
 import com.app.partyzone.core.domain.repository.UserRepository
 import com.app.partyzone.ui.base.BaseViewModel
@@ -7,9 +7,9 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class FavouriteViewModel @Inject constructor(
+class NotificationViewModel @Inject constructor(
     private val userRepository: UserRepository,
-) : BaseViewModel<FavouriteState, FavouriteEffect>(FavouriteState()) {
+) : BaseViewModel<NotificationState, Unit>(NotificationState()) {
     init {
         fetchFavourites()
     }
@@ -23,7 +23,7 @@ class FavouriteViewModel @Inject constructor(
                     it.copy(
                         isLoading = false,
                         favouriteState = favourite.map { item ->
-                            FavouriteItemState(
+                            NotificationItemState(
                                 id = item.id,
                                 name = item.name,
                                 location = item.location,
@@ -87,9 +87,5 @@ class FavouriteViewModel @Inject constructor(
 
     fun onClickRetry() {
         fetchFavourites()
-    }
-
-    fun onClickFavouriteItem(id: String, type: String) {
-        sendNewEffect(FavouriteEffect.NavigateToDetails(id, type))
     }
 }

@@ -1,11 +1,13 @@
 package com.app.partyzone.core.data.repository.remote
 
 import com.app.partyzone.core.domain.entity.Favorite
+import com.app.partyzone.core.domain.entity.Notification
 import com.app.partyzone.core.domain.entity.User
 import com.app.partyzone.core.domain.repository.UserRepository
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
+import java.util.UUID
 import javax.inject.Inject
 
 class UserRepositoryImpl @Inject constructor(
@@ -51,6 +53,14 @@ class UserRepositoryImpl @Inject constructor(
             .document(favorite.id)
             .set(favorite.copy(userId = firebaseAuth.currentUser?.uid ?: ""))
             .await()
+        val notification = Notification(
+            id = UUID.randomUUID().toString(),
+            sellerId = favorite.sellerId,
+            type = "Favorite",
+            message = "A user has added you to their favorites.",
+            userId = firebaseAuth.currentUser?.uid ?: ""
+        )
+        sendNotification(notification)
     }
 
     override suspend fun removeFromFavorites(favoriteId: String) {
@@ -58,6 +68,19 @@ class UserRepositoryImpl @Inject constructor(
             .document(favoriteId)
             .delete()
             .await()
+
+        val notification = Notification(
+            id = UUID.randomUUID().toString(),
+            sellerId = firestore.collection("favorites")
+                .document(favoriteId)
+                .get()
+                .await()
+                .get("sellerId").toString(),
+            type = "Unfavorite",
+            message = "A user has removed you from their favorites.",
+            userId = firebaseAuth.currentUser?.uid ?: ""
+        )
+        sendNotification(notification)
     }
 
     override suspend fun getFavorites(): List<Favorite> {
@@ -76,10 +99,18 @@ class UserRepositoryImpl @Inject constructor(
                     name = it.get("name").toString(),
                     location = it.get("location").toString(),
                     imageUrl = it.get("imageUrl").toString(),
-                    price = it.get("price").toString().toDoubleOrNull()
+                    price = it.get("price").toString().toDoubleOrNull(),
+                    sellerId = it.get("sellerId").toString()
                 )
             )
         }
         return favorites
+    }
+
+    override suspend fun sendNotification(notification: Notification) {
+        firestore.collection("notifications")
+            .document(notification.id)
+            .set(notification.copy(userId = firebaseAuth.currentUser?.uid ?: ""))
+            .await()
     }
 }
