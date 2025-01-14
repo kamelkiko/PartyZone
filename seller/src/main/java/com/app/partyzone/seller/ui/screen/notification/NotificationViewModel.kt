@@ -1,6 +1,6 @@
 package com.app.partyzone.seller.ui.screen.notification
 
-import com.app.partyzone.core.domain.repository.UserRepository
+import com.app.partyzone.core.domain.repository.SellerRepository
 import com.app.partyzone.seller.ui.base.BaseViewModel
 import com.app.partyzone.seller.ui.base.ErrorState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -8,7 +8,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class NotificationViewModel @Inject constructor(
-    private val userRepository: UserRepository,
+    private val sellerRepository: SellerRepository,
 ) : BaseViewModel<NotificationState, Unit>(NotificationState()) {
     init {
         fetchFavourites()
@@ -17,7 +17,7 @@ class NotificationViewModel @Inject constructor(
     private fun fetchFavourites() {
         updateState { it.copy(isLoading = true, error = null, notificationState = emptyList()) }
         tryToExecute(
-            function = { userRepository.getNotifications() },
+            function = { sellerRepository.getNotifications() },
             onSuccess = { notification ->
                 updateState {
                     it.copy(
@@ -26,7 +26,7 @@ class NotificationViewModel @Inject constructor(
                             NotificationItemState(
                                 id = item.id,
                                 message = item.message,
-                                date = item.timestamp.toDate().toString(),
+                                date = item.date,
                                 isRead = item.isRead,
                                 userId = item.userId,
                                 sellerId = item.sellerId,

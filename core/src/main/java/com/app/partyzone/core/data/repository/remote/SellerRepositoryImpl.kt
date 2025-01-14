@@ -1,7 +1,9 @@
 package com.app.partyzone.core.data.repository.remote
 
+import com.app.partyzone.core.domain.entity.Notification
 import com.app.partyzone.core.domain.entity.Seller
 import com.app.partyzone.core.domain.repository.SellerRepository
+import com.app.partyzone.core.domain.util.UnknownErrorException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
@@ -49,5 +51,35 @@ class SellerRepositoryImpl @Inject constructor(
 
     override suspend fun updateCurrentSeller(seller: Seller) {
 
+    }
+
+    override suspend fun getNotifications(): List<Notification> {
+        val notifications = mutableListOf<Notification>()
+        val data = firestore.collection("notifications")
+            .whereEqualTo("sellerId", firebaseAuth.currentUser?.uid ?: "")
+            .get()
+            .await()
+        data.forEach {
+            notifications.add(
+                Notification(
+                    id = it.get("id").toString(),
+                    userId = it.get("userId").toString(),
+                    sellerId = it.get("sellerId").toString(),
+                    type = it.get("type").toString(),
+                    message = it.get("message").toString(),
+                    isRead = it.get("isRead").toString().toBoolean(),
+                    date = it.getTimestamp("timestamp")?.toDate()?.toString()
+                        ?: throw UnknownErrorException("Timestamp is null")
+                )
+            )
+        }
+        return notifications
+    }
+
+    override suspend fun sendNotification(notification: Notification) {
+        firestore.collection("notifications")
+            .document(notification.id)
+            .set(notification.copy(userId = firebaseAuth.currentUser?.uid ?: ""))
+            .await()
     }
 }
