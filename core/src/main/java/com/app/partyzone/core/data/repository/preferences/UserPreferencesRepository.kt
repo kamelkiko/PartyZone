@@ -19,4 +19,14 @@ class UserPreferencesRepository @Inject constructor(private val dataStore: DataS
     override suspend fun getUserIsFirstTimeOpenApp(): Boolean {
         return dataStore.get()[PreferencesKeys.isFirstTimeOpenApp] ?: true
     }
+
+    override suspend fun setSellerFirstTimeUseApp() {
+        dataStore.edit { preferences ->
+            preferences[PreferencesKeys.isFirstTimeSellerOpenApp] = false
+        }
+    }
+
+    override suspend fun getSellerIsFirstTimeOpenApp(): Boolean {
+        return dataStore.get()[PreferencesKeys.isFirstTimeSellerOpenApp] ?: true
+    }
 }

@@ -19,7 +19,7 @@ class OnboardingViewModel @Inject constructor(
 
     fun setFirstTimeOpenApp() {
         viewModelScope.launch {
-            userPreferencesRepository.setUserFirstTimeUseApp()
+            userPreferencesRepository.setSellerFirstTimeUseApp()
             _effect.emit(OnboardingEffect.NavigateToLogin)
         }
     }

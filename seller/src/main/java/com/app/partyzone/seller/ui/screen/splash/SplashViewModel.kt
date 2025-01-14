@@ -13,7 +13,7 @@ class SplashViewModel @Inject constructor(
 ) : ViewModel() {
 
     suspend fun isFirstTimeOpenApp(): Boolean {
-        return userPreferencesRepository.getUserIsFirstTimeOpenApp()
+        return userPreferencesRepository.getSellerIsFirstTimeOpenApp()
     }
 
     suspend fun isUserLoggedIn(): Boolean {
