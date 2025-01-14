@@ -1,5 +1,6 @@
 package com.app.partyzone.core.data.repository.remote
 
+import com.app.partyzone.core.domain.entity.Favorite
 import com.app.partyzone.core.domain.entity.User
 import com.app.partyzone.core.domain.repository.UserRepository
 import com.google.firebase.auth.FirebaseAuth
@@ -24,7 +25,6 @@ class UserRepositoryImpl @Inject constructor(
             name = userDocument.get("name").toString(),
             email = userDocument.get("email").toString(),
             photoUrl = userDocument.get("photoUrl").toString(),
-            favouriteSellers = userDocument.get("favouriteSellers") as? List<String> ?: emptyList()
         )
     }
 
@@ -39,11 +39,47 @@ class UserRepositoryImpl @Inject constructor(
             name = userDocument.get("name").toString(),
             email = userDocument.get("email").toString(),
             photoUrl = userDocument.get("photoUrl").toString(),
-            favouriteSellers = userDocument.get("favouriteSellers") as? List<String> ?: emptyList()
         )
     }
 
     override suspend fun updateCurrentUser(user: User) {
 
+    }
+
+    override suspend fun addToFavorites(favorite: Favorite) {
+        firestore.collection("favorites")
+            .document(favorite.id)
+            .set(favorite.copy(userId = firebaseAuth.currentUser?.uid ?: ""))
+            .await()
+    }
+
+    override suspend fun removeFromFavorites(favoriteId: String) {
+        firestore.collection("favorites")
+            .document(favoriteId)
+            .delete()
+            .await()
+    }
+
+    override suspend fun getFavorites(): List<Favorite> {
+        val favorites = mutableListOf<Favorite>()
+        val data = firestore.collection("favorites")
+            .whereEqualTo("userId", firebaseAuth.currentUser?.uid ?: "")
+            .get()
+            .await()
+        data.forEach {
+            favorites.add(
+                Favorite(
+                    id = it.get("id").toString(),
+                    userId = it.get("userId").toString(),
+                    type = it.get("type").toString(),
+                    itemId = it.get("itemId").toString(),
+                    name = it.get("name").toString(),
+                    location = it.get("location").toString(),
+                    imageUrl = it.get("imageUrl").toString(),
+                    price = it.get("price") as Double?
+                )
+            )
+        }
+        return favorites
     }
 }

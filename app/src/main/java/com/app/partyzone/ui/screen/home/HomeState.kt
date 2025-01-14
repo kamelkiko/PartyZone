@@ -15,5 +15,4 @@ data class UserState(
     val name: String = "",
     val email: String = "",
     val photoUrl: String? = null,
-    val favouriteSellers: List<String> = emptyList(),
 )

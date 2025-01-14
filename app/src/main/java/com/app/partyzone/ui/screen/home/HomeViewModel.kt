@@ -27,7 +27,6 @@ class HomeViewModel @Inject constructor(
                             name = user.name,
                             email = user.email,
                             photoUrl = user.photoUrl,
-                            favouriteSellers = user.favouriteSellers
                         ),
                         error = null
                     )
