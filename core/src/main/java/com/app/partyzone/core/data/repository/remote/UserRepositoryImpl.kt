@@ -2,10 +2,12 @@ package com.app.partyzone.core.data.repository.remote
 
 import com.app.partyzone.core.domain.entity.Favorite
 import com.app.partyzone.core.domain.entity.Notification
+import com.app.partyzone.core.domain.entity.Request
 import com.app.partyzone.core.domain.entity.Seller
 import com.app.partyzone.core.domain.entity.User
 import com.app.partyzone.core.domain.repository.UserRepository
 import com.app.partyzone.core.domain.util.UnknownErrorException
+import com.app.partyzone.core.util.isNotEmptyAndBlank
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -134,8 +136,7 @@ class UserRepositoryImpl @Inject constructor(
                     type = it.get("type").toString(),
                     message = it.get("message").toString(),
                     isRead = it.get("isRead").toString().toBoolean(),
-                    date = it.getTimestamp("timestamp")?.toDate()?.toString()
-                        ?: throw UnknownErrorException("Timestamp is null")
+                    date = it.get("date").toString()
                 )
             )
         }
@@ -182,6 +183,8 @@ class UserRepositoryImpl @Inject constructor(
     }
 
     override suspend fun searchSellers(query: String): List<Seller> {
+        if (query.isNotEmptyAndBlank().not()) return emptyList()
+
         val sellers = mutableListOf<Seller>()
 
         val data = firestore.collection("sellers")
@@ -204,5 +207,74 @@ class UserRepositoryImpl @Inject constructor(
         }
 
         return sellers
+    }
+
+    override suspend fun sendRequest(request: Request) {
+        firestore.collection("requests")
+            .document(request.id)
+            .set(request)
+            .await()
+
+        val notification = Notification(
+            id = UUID.randomUUID().toString(),
+            sellerId = request.sellerId,
+            type = "Request",
+            message = "A user has requested you for rent.",
+            userId = "",
+            date = Timestamp.now().toDate().toString()
+        )
+
+        firestore.collection("notifications")
+            .document(notification.id)
+            .set(notification)
+            .await()
+    }
+
+    override suspend fun cancelRequest(requestId: String) {
+        firestore.collection("requests")
+            .document(requestId)
+            .update("status", "Cancelled")
+            .await()
+
+        val notification = Notification(
+            id = UUID.randomUUID().toString(),
+            sellerId = firestore.collection("requests")
+                .document(requestId)
+                .get()
+                .await()
+                .get("sellerId").toString(),
+            type = "Cancel",
+            message = "A user has cancelled the request",
+            userId = "",
+            date = Timestamp.now().toDate().toString()
+        )
+
+        firestore.collection("notifications")
+            .document(notification.id)
+            .set(notification)
+            .await()
+    }
+
+    override suspend fun fetchUserRequests(userId: String): List<Request> {
+        val requests = mutableListOf<Request>()
+
+        val data = firestore.collection("requests")
+            .whereEqualTo("userId", userId)
+            .get()
+            .await()
+
+        data.forEach { request ->
+            requests.add(
+                Request(
+                    id = request.get("id").toString(),
+                    userId = request.get("userId").toString(),
+                    sellerId = request.get("sellerId").toString(),
+                    offerId = request.get("offerId").toString(),
+                    postId = request.get("postId").toString(),
+                    status = request.get("status").toString(),
+                )
+            )
+        }
+        return requests
     }
 }

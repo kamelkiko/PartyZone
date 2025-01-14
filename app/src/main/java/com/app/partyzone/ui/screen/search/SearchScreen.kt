@@ -127,32 +127,13 @@ private fun SearchContent(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
-                AnimatedVisibility(searchState.isEmpty()) {
+                AnimatedVisibility(searchState.isEmpty() && isLoading.not()) {
                     LottieAnimation(
                         composition = composition,
                         progress = { progress },
                         modifier = Modifier
                             .size(256.dp)
                             .align(Alignment.CenterHorizontally)
-                    )
-                }
-            }
-        }
-
-        item {
-            Column(
-                modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                AnimatedVisibility(visible = isLoading.not() && error != null) {
-                    ErrorView(
-                        error = error,
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .wrapContentHeight()
-                            .align(Alignment.CenterHorizontally),
-                        onClickRetry = onClickRetry
                     )
                 }
             }
