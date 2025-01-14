@@ -154,7 +154,8 @@ private fun HomeContent(
             PzIconButton(
                 painter = painterResource(id = com.app.partyzone.design_system.R.drawable.notification_icon),
                 onClick = onClickNotification,
-                tint = if (hasNotifications) Color(0xFFFB0160) else Theme.colors.contentPrimary
+                tint = if (hasNotifications) Color(0xFFFB0160) else Theme.colors.contentPrimary,
+                hasNotifications = hasNotifications
             ) {
             }
         }
