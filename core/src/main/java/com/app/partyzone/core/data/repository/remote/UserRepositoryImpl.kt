@@ -71,11 +71,6 @@ class UserRepositoryImpl @Inject constructor(
     }
 
     override suspend fun removeFromFavorites(favoriteId: String) {
-        firestore.collection("favorites")
-            .document(favoriteId)
-            .delete()
-            .await()
-
         val notification = Notification(
             id = UUID.randomUUID().toString(),
             sellerId = firestore.collection("favorites")
@@ -88,7 +83,16 @@ class UserRepositoryImpl @Inject constructor(
             userId = "",
             date = Timestamp.now().toDate().toString()
         )
-        sendNotification(notification)
+
+        firestore.collection("favorites")
+            .document(favoriteId)
+            .delete()
+            .await()
+
+        firestore.collection("notifications")
+            .document(notification.id)
+            .set(notification)
+            .await()
     }
 
     override suspend fun getFavorites(): List<Favorite> {
