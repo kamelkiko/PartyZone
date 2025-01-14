@@ -37,25 +37,6 @@ sealed class BottomNavItem(
         }
     )
 
-    data object Favourite : BottomNavItem(
-        route = Screen.Favourite,
-        icon = { tint ->
-            Icon(
-                painter = painterResource(id = com.app.partyzone.design_system.R.drawable.heart_icon),
-                contentDescription = stringResource(R.string.favourite),
-                modifier = Modifier
-                    .size(24.dp)
-                    .graphicsLayer(alpha = 0.99f)
-                    .drawWithCache {
-                        onDrawWithContent {
-                            drawContent()
-                            drawRect(tint, blendMode = BlendMode.SrcAtop)
-                        }
-                    }
-            )
-        },
-    )
-
     data object Party : BottomNavItem(
         route = Screen.Party,
         icon = { tint ->

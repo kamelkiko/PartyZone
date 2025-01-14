@@ -44,7 +44,6 @@ class MainActivity : ComponentActivity() {
                         navController.currentBackStackEntryAsState().value?.destination?.route
                     val bottomNavScreens = listOf(
                         "com.app.partyzone.seller.ui.navigation.Screen.Home",
-                        "com.app.partyzone.seller.ui.navigation.Screen.Favourite",
                         "com.app.partyzone.seller.ui.navigation.Screen.Party",
                         "com.app.partyzone.seller.ui.navigation.Screen.Setting",
                         "com.app.partyzone.seller.ui.navigation.Screen.Profile"
@@ -70,7 +69,6 @@ class MainActivity : ComponentActivity() {
                                 ) {
                                     listOf(
                                         BottomNavItem.Home,
-                                        BottomNavItem.Favourite,
                                         BottomNavItem.Party,
                                         BottomNavItem.Setting,
                                         BottomNavItem.Profile

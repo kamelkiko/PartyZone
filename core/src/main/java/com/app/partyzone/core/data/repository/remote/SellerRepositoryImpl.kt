@@ -1,49 +1,53 @@
 package com.app.partyzone.core.data.repository.remote
 
-import com.app.partyzone.core.domain.entity.User
-import com.app.partyzone.core.domain.repository.UserRepository
+import com.app.partyzone.core.domain.entity.Seller
+import com.app.partyzone.core.domain.repository.SellerRepository
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
-class UserRepositoryImpl @Inject constructor(
+class SellerRepositoryImpl @Inject constructor(
     private val firebaseAuth: FirebaseAuth,
     private val firestore: FirebaseFirestore,
-) : UserRepository {
+) : SellerRepository {
 
-    override suspend fun getCurrentUser(): User {
+    override suspend fun getCurrentSeller(): Seller {
         val userAuthId = firebaseAuth.currentUser?.uid
-        val userDocument = firestore.collection("users")
+        val userDocument = firestore.collection("sellers")
             .document(userAuthId ?: "")
             .get()
             .await()
 
-        return User(
+        return Seller(
             id = userDocument.get("id").toString(),
             name = userDocument.get("name").toString(),
             email = userDocument.get("email").toString(),
             photoUrl = userDocument.get("photoUrl").toString(),
-            favouriteSellers = userDocument.get("favouriteSellers") as? List<String> ?: emptyList()
+            location = userDocument.get("location").toString(),
+            description = userDocument.get("description").toString(),
+            contactInfo = userDocument.get("contactInfo").toString(),
         )
     }
 
-    override suspend fun getUserById(id: String): User {
-        val userDocument = firestore.collection("users")
+    override suspend fun getSellerById(id: String): Seller {
+        val userDocument = firestore.collection("sellers")
             .document(id)
             .get()
             .await()
 
-        return User(
+        return Seller(
             id = userDocument.get("id").toString(),
             name = userDocument.get("name").toString(),
             email = userDocument.get("email").toString(),
             photoUrl = userDocument.get("photoUrl").toString(),
-            favouriteSellers = userDocument.get("favouriteSellers") as? List<String> ?: emptyList()
+            location = userDocument.get("location").toString(),
+            description = userDocument.get("description").toString(),
+            contactInfo = userDocument.get("contactInfo").toString(),
         )
     }
 
-    override suspend fun updateCurrentUser(user: User) {
+    override suspend fun updateCurrentSeller(seller: Seller) {
 
     }
 }

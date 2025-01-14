@@ -10,7 +10,6 @@ import androidx.navigation.compose.composable
 import com.app.partyzone.design_system.theme.Theme
 import com.app.partyzone.seller.ui.screen.auth.login.LoginScreen
 import com.app.partyzone.seller.ui.screen.auth.signup.SignupScreen
-import com.app.partyzone.seller.ui.screen.favourite.FavouriteScreen
 import com.app.partyzone.seller.ui.screen.home.HomeScreen
 import com.app.partyzone.seller.ui.screen.notification.NotificationScreen
 import com.app.partyzone.seller.ui.screen.onboarding.OnboardingScreen
@@ -49,10 +48,6 @@ fun AppNavHost(innerPadding: PaddingValues) {
 
         composable<Screen.Home> {
             HomeScreen()
-        }
-
-        composable<Screen.Favourite> {
-            FavouriteScreen()
         }
 
         composable<Screen.Party> {

@@ -2,9 +2,11 @@ package com.app.partyzone.core.di
 
 import com.app.partyzone.core.data.repository.preferences.UserPreferencesRepository
 import com.app.partyzone.core.data.repository.remote.AuthRepositoryImpl
+import com.app.partyzone.core.data.repository.remote.SellerRepositoryImpl
 import com.app.partyzone.core.data.repository.remote.UserRepositoryImpl
 import com.app.partyzone.core.domain.repository.AuthRepository
 import com.app.partyzone.core.domain.repository.IUserPreferencesRepository
+import com.app.partyzone.core.domain.repository.SellerRepository
 import com.app.partyzone.core.domain.repository.UserRepository
 import dagger.Binds
 import dagger.Module
@@ -33,4 +35,10 @@ abstract class RepositoryModule {
     abstract fun bindUserRepository(
         userRepository: UserRepositoryImpl
     ): UserRepository
+
+    @Singleton
+    @Binds
+    abstract fun bindSellerRepository(
+        sellerRepository: SellerRepositoryImpl
+    ): SellerRepository
 }

@@ -92,7 +92,11 @@ fun HomeScreen(homeViewModel: HomeViewModel = hiltViewModel()) {
             )
         }
         AnimatedVisibility(visible = state.isLoading.not() && state.error.isNullOrEmpty()) {
-            HomeContent(name = state.userState.name)
+            HomeContent(
+                name = state.userState.name,
+                onClickNotification = homeViewModel::onClickNotification,
+                onClickSearch = homeViewModel::onClickSearch
+            )
         }
     }
 }
@@ -100,6 +104,8 @@ fun HomeScreen(homeViewModel: HomeViewModel = hiltViewModel()) {
 @Composable
 private fun HomeContent(
     name: String,
+    onClickNotification: () -> Unit,
+    onClickSearch: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -147,7 +153,8 @@ private fun HomeContent(
             }
             PzIconButton(
                 painter = painterResource(id = com.app.partyzone.design_system.R.drawable.notification_icon),
-                onClick = { }) {
+                onClick = onClickNotification
+            ) {
             }
         }
         Spacer(modifier = Modifier.height(32.dp))
@@ -159,7 +166,7 @@ private fun HomeContent(
                 .border(1.dp, Theme.colors.contentBorder, RoundedCornerShape(Theme.radius.large))
                 .clip(RoundedCornerShape(Theme.radius.large))
                 .background(Theme.colors.primary, RoundedCornerShape(Theme.radius.large))
-                .clickable { },
+                .clickable { onClickSearch() },
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
