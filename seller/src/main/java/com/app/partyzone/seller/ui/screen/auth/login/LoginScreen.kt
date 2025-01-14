@@ -56,6 +56,7 @@ fun LoginScreen(loginViewModel: LoginViewModel = hiltViewModel()) {
             }
 
             is LoginEffect.NavigateToSignup -> {
+                navController.popBackStack()
                 navController.navigate(Screen.Signup)
             }
 

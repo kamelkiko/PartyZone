@@ -34,6 +34,9 @@ fun SplashScreen(viewModel: SplashViewModel = hiltViewModel()) {
         } else if (isLoggedIn) {
             navController.popBackStack()
             navController.navigate(Screen.Home)
+        } else {
+            navController.popBackStack()
+            navController.navigate(Screen.Login)
         }
     }
 

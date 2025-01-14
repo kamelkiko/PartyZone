@@ -17,29 +17,45 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.app.partyzone.design_system.composable.PzButton
 import com.app.partyzone.design_system.theme.Theme
 import com.app.partyzone.seller.R
 import com.app.partyzone.seller.ui.navigation.Screen
 import com.app.partyzone.seller.ui.screen.onboarding.composable.CenteredContentWithImageAndText
 import com.app.partyzone.seller.ui.screen.onboarding.composable.GradientPagerIndicator
+import com.app.partyzone.seller.ui.util.EventHandler
 import com.app.partyzone.seller.ui.util.LocalNavigationProvider
 import kotlinx.coroutines.launch
 
 @Composable
-fun OnboardingScreen() {
+fun OnboardingScreen(onboardingViewModel: OnboardingViewModel = hiltViewModel()) {
+    EventHandler(effects = onboardingViewModel.effect) { effect, nav ->
+        when (effect) {
+            is OnboardingEffect.NavigateToLogin -> {
+                nav.navigate(Screen.Login) {
+                    popUpTo(Screen.Onboarding) { inclusive = true }
+                }
+            }
+        }
+    }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(Theme.colors.primary)
     ) {
-        OnboardingContent()
+        OnboardingContent(
+            onClickGetStart = onboardingViewModel::setFirstTimeOpenApp
+        )
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun OnboardingContent() {
+private fun OnboardingContent(
+    onClickGetStart: () -> Unit,
+) {
     val pagerState = rememberPagerState { 3 }
     val coroutineScope = rememberCoroutineScope()
     val nav = LocalNavigationProvider.current
@@ -82,7 +98,7 @@ private fun OnboardingContent() {
                         pagerState.animateScrollToPage(pagerState.currentPage + 1)
                     }
                 } else {
-                    nav.navigate(Screen.Login)
+                    onClickGetStart()
                 }
             },
             modifier = Modifier
