@@ -2,6 +2,7 @@ package com.app.partyzone.core.data.repository.remote
 
 import com.app.partyzone.core.domain.entity.Favorite
 import com.app.partyzone.core.domain.entity.Notification
+import com.app.partyzone.core.domain.entity.Seller
 import com.app.partyzone.core.domain.entity.User
 import com.app.partyzone.core.domain.repository.UserRepository
 import com.app.partyzone.core.domain.util.UnknownErrorException
@@ -174,5 +175,30 @@ class UserRepositoryImpl @Inject constructor(
         awaitClose {
             listener.remove() // Remove the listener when the flow is no longer needed
         }
+    }
+
+    override suspend fun searchSellers(query: String): List<Seller> {
+        val sellers = mutableListOf<Seller>()
+
+        val data = firestore.collection("sellers")
+            .whereGreaterThanOrEqualTo("name", query)
+            .whereLessThanOrEqualTo("name", query + "\uf8ff")
+            .get()
+            .await()
+        data.forEach { userDocument ->
+            sellers.add(
+                Seller(
+                    id = userDocument.get("id").toString(),
+                    name = userDocument.get("name").toString(),
+                    email = userDocument.get("email").toString(),
+                    photoUrl = userDocument.get("photoUrl").toString(),
+                    location = userDocument.get("location").toString(),
+                    description = userDocument.get("description").toString(),
+                    contactInfo = userDocument.get("contactInfo").toString(),
+                )
+            )
+        }
+
+        return sellers
     }
 }
