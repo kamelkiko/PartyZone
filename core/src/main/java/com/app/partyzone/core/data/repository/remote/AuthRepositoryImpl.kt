@@ -61,7 +61,6 @@ class AuthRepositoryImpl @Inject constructor(
                         email = email,
                         name = userName,
                         id = firebaseAuth.currentUser?.uid.toString(),
-                        password = password,
                         photoUrl = null
                     )
                 ).await()
@@ -86,7 +85,6 @@ class AuthRepositoryImpl @Inject constructor(
                         email = email,
                         name = userName,
                         id = firebaseAuth.currentUser?.uid.toString(),
-                        password = password,
                         photoUrl = null,
                         description = "",
                         location = "",
