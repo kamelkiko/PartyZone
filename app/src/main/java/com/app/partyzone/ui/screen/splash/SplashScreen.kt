@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.app.partyzone.R
 import com.app.partyzone.design_system.theme.Theme
 import com.app.partyzone.ui.navigation.Screen
@@ -20,12 +21,20 @@ import com.app.partyzone.ui.util.LocalNavigationProvider
 import kotlinx.coroutines.delay
 
 @Composable
-fun SplashScreen() {
+fun SplashScreen(viewModel: SplashViewModel = hiltViewModel()) {
     val navController = LocalNavigationProvider.current
 
     LaunchedEffect(Unit) {
+        val isFirstTimeOpenApp = viewModel.isFirstTimeOpenApp()
+        val isLoggedIn = viewModel.isUserLoggedIn()
         delay(500)
-        navController.navigate(Screen.Onboarding)
+        if (isFirstTimeOpenApp) {
+            navController.popBackStack()
+            navController.navigate(Screen.Onboarding)
+        } else if (isLoggedIn) {
+            navController.popBackStack()
+            navController.navigate(Screen.Home)
+        }
     }
 
     Column(
