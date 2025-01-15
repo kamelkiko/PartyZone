@@ -26,7 +26,7 @@ class NotificationViewModel @Inject constructor(
                             NotificationItemState(
                                 id = item.id,
                                 message = item.message,
-                                date = item.date,
+                                date = item.timeStamp.toDate().toString(),
                                 isRead = item.isRead,
                                 userId = item.userId,
                                 sellerId = item.sellerId,

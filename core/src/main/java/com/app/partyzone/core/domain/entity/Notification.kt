@@ -8,7 +8,6 @@ data class Notification(
     val sellerId: String,
     val type: String, // "Request", "Accept", "Cancel", "Review", "Favorite", "Unfavorite", "ProfileView"
     val message: String,
-    val date: String,
     val timeStamp: Timestamp = Timestamp.now(),
     val isRead: Boolean = false
 )

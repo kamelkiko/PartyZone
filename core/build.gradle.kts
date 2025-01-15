@@ -48,11 +48,11 @@ dependencies {
     implementation(libs.data.store)
 
     //firebase
-    implementation(platform(libs.firebase.bom))
-    implementation(libs.firebase.firestore)
-    implementation(libs.firebase.auth)
-    implementation(libs.firebase.storage)
-    implementation(libs.play.services.auth)
+    api(platform(libs.firebase.bom))
+    api(libs.firebase.firestore)
+    api(libs.firebase.auth)
+    api(libs.firebase.storage)
+    api(libs.play.services.auth)
 
     //hilt
     implementation(libs.hilt.android)

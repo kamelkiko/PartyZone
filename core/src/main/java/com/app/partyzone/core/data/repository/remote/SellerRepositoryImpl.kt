@@ -74,7 +74,7 @@ class SellerRepositoryImpl @Inject constructor(
                     type = it.get("type").toString(),
                     message = it.get("message").toString(),
                     isRead = it.get("isRead").toString().toBoolean(),
-                    date = it.getTimestamp("timestamp")?.toDate()?.toString()
+                    timeStamp = it.getTimestamp("timestamp")
                         ?: throw UnknownErrorException("Timestamp is null")
                 )
             )
@@ -137,7 +137,7 @@ class SellerRepositoryImpl @Inject constructor(
             type = "Request",
             message = "A user has accepted your request",
             sellerId = "",
-            date = Timestamp.now().toDate().toString()
+            timeStamp = Timestamp.now()
         )
 
         firestore.collection("notifications")
@@ -162,7 +162,7 @@ class SellerRepositoryImpl @Inject constructor(
             type = "Cancel",
             message = "A seller has cancelled the request",
             sellerId = "",
-            date = Timestamp.now().toDate().toString()
+            timeStamp = Timestamp.now()
         )
 
         firestore.collection("notifications")
@@ -185,8 +185,6 @@ class SellerRepositoryImpl @Inject constructor(
                     id = request.get("id").toString(),
                     userId = request.get("userId").toString(),
                     sellerId = request.get("sellerId").toString(),
-                    offerId = request.get("offerId").toString(),
-                    postId = request.get("postId").toString(),
                     status = request.get("status").toString(),
                 )
             )

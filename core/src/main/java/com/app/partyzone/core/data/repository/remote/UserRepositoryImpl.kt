@@ -67,7 +67,7 @@ class UserRepositoryImpl @Inject constructor(
             type = "Favorite",
             message = "A user has added you to their favorites.",
             userId = "",
-            date = Timestamp.now().toDate().toString()
+            timeStamp = Timestamp.now()
         )
         sendNotification(notification)
     }
@@ -83,7 +83,7 @@ class UserRepositoryImpl @Inject constructor(
             type = "Unfavorite",
             message = "A user has removed you from their favorites.",
             userId = "",
-            date = Timestamp.now().toDate().toString()
+            timeStamp = Timestamp.now()
         )
 
         firestore.collection("favorites")
@@ -136,7 +136,8 @@ class UserRepositoryImpl @Inject constructor(
                     type = it.get("type").toString(),
                     message = it.get("message").toString(),
                     isRead = it.get("isRead").toString().toBoolean(),
-                    date = it.get("date").toString()
+                    timeStamp = it.getTimestamp("timestamp")
+                        ?: throw UnknownErrorException("Timestamp is null")
                 )
             )
         }
@@ -221,7 +222,7 @@ class UserRepositoryImpl @Inject constructor(
             type = "Request",
             message = "A user has requested you for rent.",
             userId = "",
-            date = Timestamp.now().toDate().toString()
+            timeStamp = Timestamp.now()
         )
 
         firestore.collection("notifications")
@@ -246,7 +247,7 @@ class UserRepositoryImpl @Inject constructor(
             type = "Cancel",
             message = "A user has cancelled the request",
             userId = "",
-            date = Timestamp.now().toDate().toString()
+            timeStamp = Timestamp.now()
         )
 
         firestore.collection("notifications")
@@ -269,8 +270,6 @@ class UserRepositoryImpl @Inject constructor(
                     id = request.get("id").toString(),
                     userId = request.get("userId").toString(),
                     sellerId = request.get("sellerId").toString(),
-                    offerId = request.get("offerId").toString(),
-                    postId = request.get("postId").toString(),
                     status = request.get("status").toString(),
                 )
             )
