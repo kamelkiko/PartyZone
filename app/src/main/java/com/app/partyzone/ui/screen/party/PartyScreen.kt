@@ -25,6 +25,7 @@ import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.app.partyzone.R
+import com.app.partyzone.core.domain.entity.Status
 import com.app.partyzone.design_system.composable.PzAnimatedTabLayout
 import com.app.partyzone.design_system.theme.Theme
 import com.app.partyzone.ui.util.EventHandler
@@ -105,12 +106,4 @@ private fun PartyContent(
             }
         }
     }
-}
-
-val tabItems = listOf("Upcoming", "Completed", "Cancelled")
-
-enum class Status {
-    Upcoming,
-    Completed,
-    Cancelled
 }
