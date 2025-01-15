@@ -131,7 +131,7 @@ private fun FavouriteContent(
 
         items(favouriteState) {
             PzFavouriteCard(
-                name = it.name,
+                name = it.name + " (${it.type})",
                 location = it.location,
                 imageUrl = it.imageUrl,
                 price = it.price,

@@ -112,7 +112,7 @@ private fun SearchContent(
 
         items(searchState) {
             PzSearchCard(
-                name = it.name,
+                name = it.name + " (${it.type})",
                 location = it.location,
                 imageUrl = it.imageUrl,
                 isFavourite = it.isFavourite,

@@ -118,7 +118,7 @@ class UserRepositoryImpl @Inject constructor(
                 )
             )
         }
-        return favorites
+        return favorites.sortedBy { it.name }
     }
 
     override suspend fun getNotifications(): List<Notification> {

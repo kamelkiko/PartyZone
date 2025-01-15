@@ -1,5 +1,7 @@
 package com.app.partyzone.core.domain.entity
 
+import com.google.firebase.Timestamp
+
 data class Offer(
     val id: String = "",
     val sellerId: String = "",
@@ -8,5 +10,7 @@ data class Offer(
     val description: String = "",
     val imageUrl: String = "",
     val category: String = "",
-    val reviews: List<Review> = emptyList()
+    val price: Double = 0.0,
+    val reviews: List<Review> = emptyList(),
+    val createdAt: Timestamp = Timestamp.now()
 )
