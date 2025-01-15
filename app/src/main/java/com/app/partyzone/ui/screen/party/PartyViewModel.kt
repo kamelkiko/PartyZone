@@ -1,5 +1,6 @@
 package com.app.partyzone.ui.screen.party
 
+import com.app.partyzone.core.domain.entity.Status
 import com.app.partyzone.core.domain.repository.UserRepository
 import com.app.partyzone.ui.base.BaseViewModel
 import com.app.partyzone.ui.base.ErrorState
@@ -11,10 +12,18 @@ class PartyViewModel @Inject constructor(
     private val userRepository: UserRepository,
 ) : BaseViewModel<PartyState, PartyEffect>(PartyState()) {
 
-    private fun fetchFavourites() {
+    init {
+        fetchUserRequests()
+    }
+
+    fun onClickTab(type: Status) {
+        updateState { it.copy(selectedType = type) }
+    }
+
+    private fun fetchUserRequests() {
         updateState { it.copy(isLoading = true, error = null, partyState = emptyList()) }
         tryToExecute(
-            function = { userRepository.getFavorites() },
+            function = { userRepository.fetchUserRequests() },
             onSuccess = { favourite ->
                 updateState {
                     it.copy(
@@ -22,14 +31,14 @@ class PartyViewModel @Inject constructor(
                         partyState = favourite.map { item ->
                             PartyItemState(
                                 id = item.id,
-                                name = item.name,
-                                location = item.location,
-                                imageUrl = item.imageUrl,
-                                price = item.price,
                                 userId = item.userId,
-                                itemId = item.itemId,
                                 sellerId = item.sellerId,
-                                type = item.type
+                                itemImageUrl = item.itemImageUrl,
+                                status = item.status,
+                                itemId = item.itemId,
+                                type = item.type,
+                                createdAt = item.createdAt,
+                                itemName = item.itemName
                             )
                         },
                         error = null
@@ -83,7 +92,7 @@ class PartyViewModel @Inject constructor(
     }
 
     fun onClickRetry() {
-        fetchFavourites()
+        fetchUserRequests()
     }
 
     fun onClickFavouriteItem(id: String, type: String) {

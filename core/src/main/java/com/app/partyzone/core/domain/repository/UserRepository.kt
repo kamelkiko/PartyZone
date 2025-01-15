@@ -21,5 +21,5 @@ interface UserRepository {
     suspend fun searchAll(query: String): List<SearchResult>
     suspend fun sendRequest(request: Request)
     suspend fun cancelRequest(requestId: String)
-    suspend fun fetchUserRequests(userId: String): List<Request>
+    suspend fun fetchUserRequests(): List<Request>
 }

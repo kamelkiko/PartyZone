@@ -1,13 +1,11 @@
 package com.app.partyzone.core.data.repository.remote
 
-import android.util.Log
 import com.app.partyzone.core.domain.entity.Favorite
 import com.app.partyzone.core.domain.entity.ItemType
 import com.app.partyzone.core.domain.entity.Notification
 import com.app.partyzone.core.domain.entity.NotificationType
 import com.app.partyzone.core.domain.entity.Request
 import com.app.partyzone.core.domain.entity.SearchResult
-import com.app.partyzone.core.domain.entity.Seller
 import com.app.partyzone.core.domain.entity.User
 import com.app.partyzone.core.domain.repository.UserRepository
 import com.app.partyzone.core.domain.util.UnknownErrorException
@@ -139,7 +137,7 @@ class UserRepositoryImpl @Inject constructor(
                     type = it.get("type").toString(),
                     message = it.get("message").toString(),
                     isRead = it.get("isRead").toString().toBoolean(),
-                    timeStamp = it.getTimestamp("timestamp")
+                    timeStamp = it.getTimestamp("timeStamp")
                         ?: throw UnknownErrorException("Timestamp is null")
                 )
             )
@@ -154,7 +152,7 @@ class UserRepositoryImpl @Inject constructor(
             }
             batch.commit().await()
         }
-        return notifications
+        return notifications.sortedByDescending { it.timeStamp }
     }
 
     override suspend fun sendNotification(notification: Notification) {
@@ -322,11 +320,11 @@ class UserRepositoryImpl @Inject constructor(
         sendNotification(notification)
     }
 
-    override suspend fun fetchUserRequests(userId: String): List<Request> {
+    override suspend fun fetchUserRequests(): List<Request> {
         val requests = mutableListOf<Request>()
 
         val data = firestore.collection("requests")
-            .whereEqualTo("userId", userId)
+            .whereEqualTo("userId", firebaseAuth.currentUser?.uid ?: "")
             .get()
             .await()
 
@@ -337,9 +335,15 @@ class UserRepositoryImpl @Inject constructor(
                     userId = request.get("userId").toString(),
                     sellerId = request.get("sellerId").toString(),
                     status = request.get("status").toString(),
+                    itemId = request.get("itemId").toString(),
+                    itemImageUrl = request.get("itemImageUrl").toString(),
+                    itemName = request.get("itemName").toString(),
+                    type = request.get("type").toString(),
+                    createdAt = request.getTimestamp("createdAt")
+                        ?: throw UnknownErrorException("TimeStamp is null"),
                 )
             )
         }
-        return requests
+        return requests.sortedByDescending { it.createdAt }
     }
 }

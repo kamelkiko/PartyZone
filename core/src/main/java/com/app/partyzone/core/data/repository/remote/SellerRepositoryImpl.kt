@@ -74,7 +74,7 @@ class SellerRepositoryImpl @Inject constructor(
                     type = it.get("type").toString(),
                     message = it.get("message").toString(),
                     isRead = it.get("isRead").toString().toBoolean(),
-                    timeStamp = it.getTimestamp("timestamp")
+                    timeStamp = it.getTimestamp("timeStamp")
                         ?: throw UnknownErrorException("Timestamp is null")
                 )
             )
@@ -89,7 +89,7 @@ class SellerRepositoryImpl @Inject constructor(
             }
             batch.commit().await()
         }
-        return notifications
+        return notifications.sortedByDescending { it.timeStamp }
     }
 
     override suspend fun sendNotification(notification: Notification) {
