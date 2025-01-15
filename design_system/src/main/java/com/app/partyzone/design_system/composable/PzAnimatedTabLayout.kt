@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
@@ -35,6 +36,7 @@ import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.toSize
 import com.app.partyzone.design_system.theme.Theme
+import com.app.partyzone.design_system.theme.brush
 
 @Composable
 fun <E : Enum<*>> PzAnimatedTabLayout(
@@ -42,9 +44,9 @@ fun <E : Enum<*>> PzAnimatedTabLayout(
     selectedTab: E,
     onTabSelected: (E) -> Unit,
     modifier: Modifier = Modifier,
-    horizontalPadding: Dp = 4.dp,
+    horizontalPadding: Dp = 0.dp,
     selectedTabColor: Color = Theme.colors.primary,
-    containerColor: Color = Theme.colors.surface,
+    containerColor: Color = Theme.colors.contentTertiary,
     shape: Shape = RoundedCornerShape(Theme.radius.medium),
     borderStroke: BorderStroke? = BorderStroke(1.dp, Theme.colors.divider),
     content: @Composable (E) -> Unit,
@@ -66,7 +68,7 @@ fun <E : Enum<*>> PzAnimatedTabLayout(
             )
             .drawBehind {
                 drawRoundRect(
-                    selectedTabColor,
+                    brush = brush,
                     topLeft = selectedTabOffsetAnimated,
                     size = tabSize.toSize(),
                     cornerRadius = CornerRadius(radiusPx)
@@ -79,7 +81,7 @@ fun <E : Enum<*>> PzAnimatedTabLayout(
             AnimatedTab(
                 tab = tab,
                 onTabSelected = onTabSelected,
-                modifier = Modifier
+                modifier = Modifier.height(128.dp)
                     .padding(
                         start = if (index == 0) horizontalPadding else 0.dp,
                         end = if (index == tabItems.size - 1) horizontalPadding else 0.dp
