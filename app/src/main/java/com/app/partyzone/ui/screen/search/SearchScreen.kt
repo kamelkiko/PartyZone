@@ -127,7 +127,7 @@ private fun SearchContent(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
-                AnimatedVisibility(searchState.isEmpty() && isLoading.not()) {
+                AnimatedVisibility(searchState.isEmpty() && isLoading.not() && error == null) {
                     LottieAnimation(
                         composition = composition,
                         progress = { progress },

@@ -1,16 +1,22 @@
 package com.app.partyzone.core.data.repository.remote
 
+import android.util.Log
 import com.app.partyzone.core.domain.entity.Favorite
+import com.app.partyzone.core.domain.entity.ItemType
 import com.app.partyzone.core.domain.entity.Notification
+import com.app.partyzone.core.domain.entity.NotificationType
 import com.app.partyzone.core.domain.entity.Request
+import com.app.partyzone.core.domain.entity.SearchResult
 import com.app.partyzone.core.domain.entity.Seller
 import com.app.partyzone.core.domain.entity.User
 import com.app.partyzone.core.domain.repository.UserRepository
 import com.app.partyzone.core.domain.util.UnknownErrorException
 import com.app.partyzone.core.util.isNotEmptyAndBlank
+import com.google.android.gms.tasks.Tasks
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.QuerySnapshot
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
@@ -64,7 +70,7 @@ class UserRepositoryImpl @Inject constructor(
         val notification = Notification(
             id = UUID.randomUUID().toString(),
             sellerId = favorite.sellerId,
-            type = "Favorite",
+            type = NotificationType.Favorite.name,
             message = "A user has added you to their favorites.",
             userId = "",
             timeStamp = Timestamp.now()
@@ -80,7 +86,7 @@ class UserRepositoryImpl @Inject constructor(
                 .get()
                 .await()
                 .get("sellerId").toString(),
-            type = "Unfavorite",
+            type = NotificationType.Unfavorite.name,
             message = "A user has removed you from their favorites.",
             userId = "",
             timeStamp = Timestamp.now()
@@ -91,10 +97,7 @@ class UserRepositoryImpl @Inject constructor(
             .delete()
             .await()
 
-        firestore.collection("notifications")
-            .document(notification.id)
-            .set(notification)
-            .await()
+        sendNotification(notification)
     }
 
     override suspend fun getFavorites(): List<Favorite> {
@@ -144,7 +147,7 @@ class UserRepositoryImpl @Inject constructor(
         if (notifications.isNotEmpty()) {
             val batch = firestore.batch()
             for (notification in notifications) {
-                val notificationRef = FirebaseFirestore.getInstance()
+                val notificationRef = firestore
                     .collection("notifications")
                     .document(notification.id)
                 batch.update(notificationRef, "isRead", true)
@@ -157,7 +160,7 @@ class UserRepositoryImpl @Inject constructor(
     override suspend fun sendNotification(notification: Notification) {
         firestore.collection("notifications")
             .document(notification.id)
-            .set(notification.copy(userId = firebaseAuth.currentUser?.uid ?: ""))
+            .set(notification)
             .await()
     }
 
@@ -183,31 +186,100 @@ class UserRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun searchSellers(query: String): List<Seller> {
-        if (query.isNotEmptyAndBlank().not()) return emptyList()
+    override suspend fun searchAll(query: String): List<SearchResult> {
+        try {
+            if (query.isNotEmptyAndBlank().not()) return emptyList()
 
-        val sellers = mutableListOf<Seller>()
+            val result = mutableListOf<SearchResult>()
 
-        val data = firestore.collection("sellers")
-            .whereGreaterThanOrEqualTo("name", query)
-            .whereLessThanOrEqualTo("name", query + "\uf8ff")
-            .get()
-            .await()
-        data.forEach { userDocument ->
-            sellers.add(
-                Seller(
-                    id = userDocument.get("id").toString(),
-                    name = userDocument.get("name").toString(),
-                    email = userDocument.get("email").toString(),
-                    photoUrl = userDocument.get("photoUrl").toString(),
-                    location = userDocument.get("location").toString(),
-                    description = userDocument.get("description").toString(),
-                    contactInfo = userDocument.get("contactInfo").toString(),
-                )
-            )
+            val favoritesSnapshot = firestore.collection("favorites")
+                .whereEqualTo("userId", firebaseAuth.currentUser?.uid ?: "")
+                .get()
+                .await()
+
+            val favoriteMap = favoritesSnapshot.documents.associate {
+                (it.getString("itemId") ?: "") to it.id
+            }
+
+            val sellersQuery = firestore.collection("sellers")
+                .whereGreaterThanOrEqualTo("name", query)
+                .whereLessThanOrEqualTo("name", query + "\uf8ff")
+
+            val postsQuery = firestore.collection("Post")
+                .whereGreaterThanOrEqualTo("description", query)
+                .whereLessThanOrEqualTo("description", query + "\uf8ff")
+
+            val offersQuery = firestore.collection("offers")
+                .whereGreaterThanOrEqualTo("description", query)
+                .whereLessThanOrEqualTo("description", query + "\uf8ff")
+
+            // Perform all queries in parallel
+            val sellersTask = sellersQuery.get()
+            val postsTask = postsQuery.get()
+            val offersTask = offersQuery.get()
+
+            val querySnapshots =
+                Tasks.whenAllSuccess<QuerySnapshot>(sellersTask, postsTask, offersTask).await()
+
+            if (querySnapshots[0] != null) {
+                querySnapshots[0].forEach { userDocument ->
+                    result.add(
+                        SearchResult(
+                            id = userDocument.get("id").toString(),
+                            name = userDocument.get("name").toString(),
+                            location = userDocument.get("location").toString(),
+                            imageUrl = userDocument.get("photoUrl").toString(),
+                            itemId = userDocument.get("id").toString(),
+                            type = ItemType.Seller.name,
+                            isFav = favoriteMap.containsKey(userDocument.get("id").toString()),
+                            favId = favoriteMap[userDocument.get("id").toString()],
+                            sellerId = userDocument.get("id").toString(),
+                        )
+                    )
+                }
+            }
+
+            if (querySnapshots[1] != null) {
+                querySnapshots[1].forEach { userDocument ->
+                    result.add(
+                        SearchResult(
+                            id = userDocument.get("id").toString(),
+                            name = userDocument.get("description").toString(),
+                            location = userDocument.get("category").toString(),
+                            imageUrl = userDocument.get("imageUrl").toString(),
+                            itemId = userDocument.get("id").toString(),
+                            type = ItemType.Post.name,
+                            isFav = favoriteMap.containsKey(userDocument.get("id").toString()),
+                            favId = favoriteMap[userDocument.get("id").toString()],
+                            sellerId = userDocument.get("sellerId").toString(),
+                        )
+                    )
+                }
+            }
+
+            if (querySnapshots[2] != null) {
+                querySnapshots[2].forEach { userDocument ->
+                    result.add(
+                        SearchResult(
+                            id = userDocument.get("id").toString(),
+                            name = userDocument.get("description").toString(),
+                            location = userDocument.get("category").toString(),
+                            imageUrl = userDocument.get("imageUrl").toString(),
+                            itemId = userDocument.get("id").toString(),
+                            type = ItemType.Offer.name,
+                            price = userDocument.get("price").toString().toDoubleOrNull() ?: 0.0,
+                            isFav = favoriteMap.containsKey(userDocument.get("id").toString()),
+                            favId = favoriteMap[userDocument.get("id").toString()],
+                            sellerId = userDocument.get("sellerId").toString(),
+                        )
+                    )
+                }
+            }
+
+            return result
+        } catch (e: Exception) {
+            throw UnknownErrorException(e.message.toString())
         }
-
-        return sellers
     }
 
     override suspend fun sendRequest(request: Request) {
@@ -219,16 +291,13 @@ class UserRepositoryImpl @Inject constructor(
         val notification = Notification(
             id = UUID.randomUUID().toString(),
             sellerId = request.sellerId,
-            type = "Request",
+            type = NotificationType.Request.name,
             message = "A user has requested you for rent.",
             userId = "",
             timeStamp = Timestamp.now()
         )
 
-        firestore.collection("notifications")
-            .document(notification.id)
-            .set(notification)
-            .await()
+        sendNotification(notification)
     }
 
     override suspend fun cancelRequest(requestId: String) {
@@ -244,16 +313,13 @@ class UserRepositoryImpl @Inject constructor(
                 .get()
                 .await()
                 .get("sellerId").toString(),
-            type = "Cancel",
+            type = NotificationType.Cancel.name,
             message = "A user has cancelled the request",
             userId = "",
             timeStamp = Timestamp.now()
         )
 
-        firestore.collection("notifications")
-            .document(notification.id)
-            .set(notification)
-            .await()
+        sendNotification(notification)
     }
 
     override suspend fun fetchUserRequests(userId: String): List<Request> {

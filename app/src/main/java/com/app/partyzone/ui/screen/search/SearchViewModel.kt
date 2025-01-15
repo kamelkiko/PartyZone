@@ -1,9 +1,11 @@
 package com.app.partyzone.ui.screen.search
 
+import com.app.partyzone.core.domain.entity.Favorite
 import com.app.partyzone.core.domain.repository.UserRepository
 import com.app.partyzone.ui.base.BaseViewModel
 import com.app.partyzone.ui.base.ErrorState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import java.util.UUID
 import javax.inject.Inject
 
 @HiltViewModel
@@ -60,17 +62,39 @@ class SearchViewModel @Inject constructor(
     }
 
     fun onClickFavIcon(id: String) {
+        updateState { it.copy(isLoading = true, error = null) }
+        val item = state.value.searchState.find { it.id == id }
         tryToExecute(
-            function = { userRepository.removeFromFavorites(id) },
-            onSuccess = {},
-            onError = {}
+            function = {
+                if (item?.isFavourite == true)
+                    userRepository.removeFromFavorites(item.favId ?: "")
+                else if (item?.isFavourite == false)
+                    userRepository.addToFavorites(
+                        Favorite(
+                            id = UUID.randomUUID().toString(),
+                            userId = "",
+                            sellerId = item.sellerId ?: "",
+                            itemId = item.id,
+                            name = item.name,
+                            location = item.location,
+                            imageUrl = item.imageUrl,
+                            price = item.price,
+                            type = item.type
+                        )
+                    )
+            },
+            onSuccess = {
+                updateState { it.copy(isLoading = false, error = null) }
+                onQueryChange(query = state.value.query)
+            },
+            onError = ::handleError
         )
     }
 
     fun onQueryChange(query: String) {
         updateState { it.copy(query = query, isLoading = true, error = null) }
         tryToExecute(
-            function = { userRepository.searchSellers(query) },
+            function = { userRepository.searchAll(query) },
             onSuccess = { result ->
                 updateState {
                     it.copy(
@@ -81,9 +105,12 @@ class SearchViewModel @Inject constructor(
                                 id = searchItem.id,
                                 name = searchItem.name,
                                 location = searchItem.location,
-                                imageUrl = searchItem.photoUrl,
-                                type = "seller",
-                                isFavourite = true
+                                imageUrl = searchItem.imageUrl,
+                                type = searchItem.type,
+                                isFavourite = searchItem.isFav,
+                                sellerId = searchItem.sellerId,
+                                favId = searchItem.favId,
+                                price = searchItem.price,
                             )
                         }
                     )

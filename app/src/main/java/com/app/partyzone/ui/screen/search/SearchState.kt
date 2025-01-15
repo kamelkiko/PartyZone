@@ -16,6 +16,9 @@ data class SearchItemState(
     val name: String = "",
     val location: String = "",
     val imageUrl: String? = null,
+    val price: Double? = null,
+    val sellerId: String? = null,
+    val favId: String? = null,
     val type: String = "",
     val isFavourite: Boolean = false,
 )
