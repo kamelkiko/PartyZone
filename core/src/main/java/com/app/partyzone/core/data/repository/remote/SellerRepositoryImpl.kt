@@ -171,11 +171,11 @@ class SellerRepositoryImpl @Inject constructor(
             .await()
     }
 
-    override suspend fun fetchSellerRequests(sellerId: String): List<Request> {
+    override suspend fun fetchSellerRequests(): List<Request> {
         val requests = mutableListOf<Request>()
 
         val data = firestore.collection("requests")
-            .whereEqualTo("sellerId", sellerId)
+            .whereEqualTo("sellerId", firebaseAuth.currentUser?.uid ?: "")
             .get()
             .await()
 
@@ -186,6 +186,12 @@ class SellerRepositoryImpl @Inject constructor(
                     userId = request.get("userId").toString(),
                     sellerId = request.get("sellerId").toString(),
                     status = request.get("status").toString(),
+                    itemId = request.get("itemId").toString(),
+                    itemImageUrl = request.get("itemImageUrl").toString(),
+                    itemName = request.get("itemName").toString(),
+                    type = request.get("type").toString(),
+                    createdAt = request.getTimestamp("createdAt")
+                        ?: throw UnknownErrorException("TimeStamp is null"),
                 )
             )
         }

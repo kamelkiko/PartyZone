@@ -1,6 +1,7 @@
 package com.app.partyzone.ui.screen.party
 
 import com.app.partyzone.core.domain.entity.Status
+import com.app.partyzone.core.domain.repository.SellerRepository
 import com.app.partyzone.core.domain.repository.UserRepository
 import com.app.partyzone.ui.base.BaseViewModel
 import com.app.partyzone.ui.base.ErrorState
@@ -9,21 +10,21 @@ import javax.inject.Inject
 
 @HiltViewModel
 class PartyViewModel @Inject constructor(
-    private val userRepository: UserRepository,
+   private val sellerRepository: SellerRepository
 ) : BaseViewModel<PartyState, PartyEffect>(PartyState()) {
 
     init {
-        fetchUserRequests()
+        fetchSellerRequests()
     }
 
     fun onClickTab(type: Status) {
         updateState { it.copy(selectedType = type) }
     }
 
-    private fun fetchUserRequests() {
+    private fun fetchSellerRequests() {
         updateState { it.copy(isLoading = true, error = null, partyState = emptyList()) }
         tryToExecute(
-            function = { userRepository.fetchUserRequests() },
+            function = { sellerRepository.fetchSellerRequests() },
             onSuccess = { favourite ->
                 updateState {
                     it.copy(
@@ -92,7 +93,7 @@ class PartyViewModel @Inject constructor(
     }
 
     fun onClickRetry() {
-        fetchUserRequests()
+        fetchSellerRequests()
     }
 
     fun onClickFavouriteItem(id: String, type: String) {

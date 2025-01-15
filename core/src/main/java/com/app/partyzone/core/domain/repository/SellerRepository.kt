@@ -14,5 +14,5 @@ interface SellerRepository {
     fun hasNotification(): Flow<Boolean>
     suspend fun acceptRequest(requestId: String)
     suspend fun cancelRequest(requestId: String)
-    suspend fun fetchSellerRequests(sellerId: String): List<Request>
+    suspend fun fetchSellerRequests(): List<Request>
 }
