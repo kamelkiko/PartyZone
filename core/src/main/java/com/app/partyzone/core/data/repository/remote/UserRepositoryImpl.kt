@@ -85,8 +85,8 @@ class UserRepositoryImpl @Inject constructor(
             throw UnknownErrorException("Failed to update your profile: ${e.message}")
         }
 
-        var photoUrl: String? = user.photoUrl
-        if (user.photoUrl != null && user.photoUrl.startsWith("file:")) {
+        var photoUrl: String? = null
+        if (user.imageUri != null) {
             // Upload the new photo to Firebase Storage
             val fileUri = Uri.parse(user.photoUrl)
             val storageRef = firebaseStorage.reference
