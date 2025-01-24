@@ -34,8 +34,8 @@ fun SettingScreen(viewModel: SettingViewModel = hiltViewModel()) {
 
     EventHandler(effects = viewModel.effect) { effect, navController ->
         when (effect) {
-            is SettingEffect.NavigateToEditProfile -> {
-                // navController.navigate(Screen.Notification)
+            is SettingEffect.NavigateToUpdateProfile -> {
+                navController.navigate(Screen.UpdateProfile)
             }
 
             SettingEffect.NavigateToLogin -> {

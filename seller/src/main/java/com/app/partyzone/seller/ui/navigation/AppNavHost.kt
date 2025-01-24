@@ -15,6 +15,7 @@ import com.app.partyzone.seller.ui.screen.notification.NotificationScreen
 import com.app.partyzone.seller.ui.screen.onboarding.OnboardingScreen
 import com.app.partyzone.seller.ui.screen.party.PartyScreen
 import com.app.partyzone.seller.ui.screen.profile.ProfileScreen
+import com.app.partyzone.seller.ui.screen.profile.update.UpdateProfileScreen
 import com.app.partyzone.seller.ui.screen.setting.SettingScreen
 import com.app.partyzone.seller.ui.screen.splash.SplashScreen
 import com.app.partyzone.seller.ui.util.LocalNavigationProvider
@@ -59,6 +60,10 @@ fun AppNavHost(innerPadding: PaddingValues) {
 
         composable<Screen.Profile> {
             ProfileScreen()
+        }
+
+        composable<Screen.UpdateProfile> {
+            UpdateProfileScreen()
         }
 
         composable<Screen.Notification> {

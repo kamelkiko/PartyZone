@@ -12,7 +12,7 @@ class SettingViewModel @Inject constructor(
 ) : BaseViewModel<SettingState, SettingEffect>(SettingState()) {
 
     fun onClickedEditProfile() {
-        sendNewEffect(SettingEffect.NavigateToEditProfile)
+        sendNewEffect(SettingEffect.NavigateToUpdateProfile)
     }
 
     fun onClickedLogout() {

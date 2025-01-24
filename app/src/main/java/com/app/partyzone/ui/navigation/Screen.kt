@@ -31,6 +31,9 @@ sealed interface Screen {
     data object Profile : Screen
 
     @Serializable
+    data object UpdateProfile : Screen
+
+    @Serializable
     data object Setting : Screen
 
     @Serializable
