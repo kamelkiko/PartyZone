@@ -1,6 +1,5 @@
 package com.app.partyzone.core.data.repository.remote
 
-import android.net.Uri
 import com.app.partyzone.core.domain.entity.Favorite
 import com.app.partyzone.core.domain.entity.ItemType
 import com.app.partyzone.core.domain.entity.Notification
@@ -87,12 +86,10 @@ class UserRepositoryImpl @Inject constructor(
 
         var photoUrl: String? = null
         if (user.imageUri != null) {
-            // Upload the new photo to Firebase Storage
-            val fileUri = Uri.parse(user.photoUrl)
             val storageRef = firebaseStorage.reference
             val photoRef = storageRef.child("profile_images/${currentUser.uid}.jpg")
             try {
-                photoRef.putFile(fileUri).await()
+                photoRef.putFile(user.imageUri).await()
                 photoUrl = photoRef.downloadUrl.await().toString()
             } catch (e: Exception) {
                 throw UnknownErrorException("Failed to upload photo: ${e.message}")
