@@ -55,7 +55,7 @@ fun PzSearchCard(
                 model = imageUrl,
                 contentDescription = stringResource(R.string.profile_image),
                 modifier = Modifier
-                    .size(32.dp)
+                    .size(64.dp)
                     .clip(CircleShape),
                 placeholder = painterResource(id = com.app.partyzone.design_system.R.drawable.logo),
                 error = painterResource(id = com.app.partyzone.design_system.R.drawable.logo),
