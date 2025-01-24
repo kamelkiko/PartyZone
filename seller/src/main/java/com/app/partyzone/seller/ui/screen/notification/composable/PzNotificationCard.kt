@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -40,7 +39,8 @@ fun PzNotificationCard(
     ) {
         PzCircleImage(
             painter = painterResource(id = com.app.partyzone.design_system.R.drawable.logo),
-            modifier = Modifier.size(64.dp),
+            boxSize = 64.dp,
+            imageSize = 64.dp,
             onClick = {}
         )
         Spacer(modifier = Modifier.width(16.dp))

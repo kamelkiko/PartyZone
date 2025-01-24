@@ -24,7 +24,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.app.partyzone.R
-import com.app.partyzone.design_system.composable.PzRoundedImage
+import com.app.partyzone.design_system.composable.PzCircleImage
 import com.app.partyzone.design_system.theme.Theme
 
 @Composable
@@ -48,9 +48,10 @@ fun PzSearchCard(
             .clickable { onClick() },
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        PzRoundedImage(
+        PzCircleImage(
             painter = painterResource(id = com.app.partyzone.design_system.R.drawable.logo),
-            modifier = Modifier.size(64.dp),
+            boxSize = 64.dp,
+            imageSize = 64.dp,
             onClick = {}
         )
         Spacer(modifier = Modifier.width(16.dp))

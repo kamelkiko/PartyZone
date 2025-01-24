@@ -44,4 +44,5 @@
     <string name="log_out">Log Out</string>
     <string name="icon_back">Icon back</string>
     <string name="edit_profile">Edit Profile</string>
+    <string name="profile_image">Profile Image</string>
 </resources>

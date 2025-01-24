@@ -18,6 +18,7 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.app.partyzone.design_system.composable.modifier.noRippleEffect
 import com.app.partyzone.design_system.theme.Theme
 
 @Composable
@@ -25,19 +26,19 @@ fun PzCircleImage(
     painter: Painter,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    boxSize: Dp = 72.dp,
+    boxSize: Dp = 32.dp,
     imageSize: Dp = 32.dp,
-    strokeWidth: Dp = 2.dp,
+    strokeWidth: Dp = 1.dp,
     strokeColor: Color = Theme.colors.contentTertiary,
-    backgroundColor: Color = Theme.colors.surface,
-    imageScale: ContentScale = ContentScale.Crop,
+    backgroundColor: Color = Theme.colors.primary,
+    imageScale: ContentScale = ContentScale.Inside,
 ) {
     Box(
         modifier = modifier
             .clip(shape = CircleShape)
             .background(backgroundColor)
             .size(boxSize)
-            .clickable { onClick() }
+            .noRippleEffect { onClick() }
             .border(width = strokeWidth, color = strokeColor, shape = CircleShape),
         contentAlignment = Alignment.Center
     ) {
@@ -52,7 +53,7 @@ fun PzCircleImage(
 }
 
 @Composable
-fun BpCircleImage(
+fun PzCircleImage(
     bitmap: ImageBitmap?,
     placeholder: Painter,
     onClick: () -> Unit,
@@ -83,7 +84,9 @@ fun BpCircleImage(
             )
         } else {
             Image(
-                modifier = Modifier.fillMaxSize().clip(CircleShape),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .clip(CircleShape),
                 bitmap = bitmap,
                 contentDescription = "",
                 alignment = Alignment.Center,

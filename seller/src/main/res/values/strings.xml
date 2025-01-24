@@ -35,4 +35,6 @@
     <string name="alltickets">AllTickets</string>
     <string name="update_profile">Update Profile</string>
     <string name="log_out">Log Out</string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="icon_back">Icon back</string>
 </resources>
