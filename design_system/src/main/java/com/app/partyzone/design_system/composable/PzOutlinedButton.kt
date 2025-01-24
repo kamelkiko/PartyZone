@@ -31,12 +31,12 @@ fun PzOutlinedButton(
     textStyle: TextStyle = Theme.typography.titleLarge,
     textPadding: PaddingValues = PaddingValues(16.dp),
     shape: Shape = RoundedCornerShape(Theme.radius.medium),
-    contentColor: Color = Theme.colors.primary,
+    contentColor: Color = Theme.colors.contentPrimary,
     border: BorderStroke = BorderStroke(1.dp, color = Theme.colors.primary),
     horizontalArrangement: Arrangement.Horizontal = Arrangement.Center,
 ) {
     val buttonBorderColor by animateColorAsState(
-        if (enabled) Theme.colors.primary
+        if (enabled) Theme.colors.contentPrimary
         else Theme.colors.disable, label = ""
     )
 

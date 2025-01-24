@@ -40,4 +40,6 @@
     <string name="notification">Notification</string>
     <string name="heart_icon">Heart icon</string>
     <string name="alltickets">AllTickets</string>
+    <string name="update_profile">Update Profile</string>
+    <string name="log_out">Log Out</string>
 </resources>
