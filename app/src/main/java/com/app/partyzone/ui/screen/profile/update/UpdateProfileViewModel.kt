@@ -45,13 +45,13 @@ class UpdateProfileViewModel @Inject constructor(
         updateState { it.copy(isLoadingGetUser = true) }
         tryToExecute(
             function = { userRepository.getCurrentUser() },
-            onSuccess = {
+            onSuccess = { user ->
                 updateState {
                     it.copy(
                         isLoadingGetUser = false,
-                        name = it.name,
-                        email = it.email,
-                        photoUrl = it.photoUrl
+                        name = user.name,
+                        email = user.email,
+                        photoUrl = user.photoUrl
                     )
                 }
             },

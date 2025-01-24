@@ -65,19 +65,20 @@ class UserRepositoryImpl @Inject constructor(
         val currentUser =
             firebaseAuth.currentUser ?: throw AuthorizationException.UnAuthorizedException
 
-        val credential =
-            EmailAuthProvider.getCredential(currentUser.email ?: "", user.oldPassword)
-        try {
-            currentUser.reauthenticate(credential).await()
-        } catch (e: Exception) {
-            throw AuthorizationException.InvalidPasswordException
+        if (user.oldPassword.isNotEmptyAndBlank() && user.newPassword.isNotEmptyAndBlank()) {
+            val credential =
+                EmailAuthProvider.getCredential(currentUser.email ?: "", user.oldPassword)
+            try {
+                currentUser.reauthenticate(credential).await()
+            } catch (e: Exception) {
+                throw AuthorizationException.InvalidPasswordException
+            }
         }
-
         try {
             if (user.email != currentUser.email) {
                 currentUser.verifyBeforeUpdateEmail(user.email).await()
             }
-            if (user.newPassword.isNotEmptyAndBlank()) {
+            if (user.newPassword.isNotEmptyAndBlank() && user.oldPassword.isNotEmptyAndBlank()) {
                 currentUser.updatePassword(user.newPassword).await()
             }
         } catch (e: Exception) {

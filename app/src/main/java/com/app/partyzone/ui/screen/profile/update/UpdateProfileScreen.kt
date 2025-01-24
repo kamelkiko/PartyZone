@@ -212,7 +212,9 @@ private fun UpdateProfileContent(
                 contentScale = androidx.compose.ui.layout.ContentScale.Crop,
             )
         }
-        AnimatedVisibility(imageUri == null) {
+        AnimatedVisibility(
+            (imageUri == null || imageUri.toString().isEmpty()) && photoUrl.isNullOrEmpty()
+        ) {
             PzCircleImage(
                 painter = painterResource(id = com.app.partyzone.design_system.R.drawable.logo),
                 boxSize = 150.dp,
@@ -299,8 +301,8 @@ private fun UpdateProfileContent(
                 .height(56.dp)
                 .align(Alignment.CenterHorizontally),
             isLoading = isLoading,
-            enabled = email.isNotEmptyAndBlank() && name.isNotEmptyAndBlank()
-                    && oldPassword.isNotEmptyAndBlank() && newPassword.isNotEmptyAndBlank(),
+            enabled = email.isNotEmptyAndBlank() || name.isNotEmptyAndBlank()
+                    || oldPassword.isNotEmptyAndBlank() || newPassword.isNotEmptyAndBlank(),
         )
     }
 }

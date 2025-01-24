@@ -65,19 +65,21 @@ class SellerRepositoryImpl @Inject constructor(
         val currentUser =
             firebaseAuth.currentUser ?: throw AuthorizationException.UnAuthorizedException
 
-        val credential =
-            EmailAuthProvider.getCredential(currentUser.email ?: "", seller.oldPassword)
-        try {
-            currentUser.reauthenticate(credential).await()
-        } catch (e: Exception) {
-            throw AuthorizationException.InvalidPasswordException
+        if (seller.oldPassword.isNotEmptyAndBlank() && seller.newPassword.isNotEmptyAndBlank()) {
+            val credential =
+                EmailAuthProvider.getCredential(currentUser.email ?: "", seller.oldPassword)
+            try {
+                currentUser.reauthenticate(credential).await()
+            } catch (e: Exception) {
+                throw AuthorizationException.InvalidPasswordException
+            }
         }
 
         try {
             if (seller.email != currentUser.email) {
                 currentUser.verifyBeforeUpdateEmail(seller.email).await()
             }
-            if (seller.newPassword.isNotEmptyAndBlank()) {
+            if (seller.oldPassword.isNotEmptyAndBlank() && seller.newPassword.isNotEmptyAndBlank()) {
                 currentUser.updatePassword(seller.newPassword).await()
             }
         } catch (e: Exception) {
