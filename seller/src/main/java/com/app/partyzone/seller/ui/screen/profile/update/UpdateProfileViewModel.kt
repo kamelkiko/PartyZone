@@ -1,7 +1,8 @@
 package com.app.partyzone.seller.ui.screen.profile.update
 
-import com.app.partyzone.core.domain.entity.UpdateUser
-import com.app.partyzone.core.domain.repository.UserRepository
+import android.net.Uri
+import com.app.partyzone.core.domain.entity.UpdateSeller
+import com.app.partyzone.core.domain.repository.SellerRepository
 import com.app.partyzone.seller.ui.base.BaseViewModel
 import com.app.partyzone.seller.ui.base.ErrorState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -9,11 +10,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 class UpdateProfileViewModel @Inject constructor(
-    private val userRepository: UserRepository,
+    private val sellerRepository: SellerRepository,
 ) : BaseViewModel<UpdateProfileState, UpdateProfileEffect>(UpdateProfileState()) {
 
     init {
-        initUser()
+        initSeller()
     }
 
     fun onClickIconBack() {
@@ -36,21 +37,21 @@ class UpdateProfileViewModel @Inject constructor(
         updateState { it.copy(newPassword = newPassword) }
     }
 
-    fun onImageUriChanged(imageUri: String) {
+    fun onImageUriChanged(imageUri: Uri?) {
         updateState { it.copy(imageUri = imageUri) }
     }
 
-    private fun initUser() {
+    private fun initSeller() {
         updateState { it.copy(isLoadingGetUser = true) }
         tryToExecute(
-            function = { userRepository.getCurrentUser() },
-            onSuccess = {
+            function = { sellerRepository.getCurrentSeller() },
+            onSuccess = { seller ->
                 updateState {
                     it.copy(
                         isLoadingGetUser = false,
-                        name = it.name,
-                        email = it.email,
-                        imageUri = it.imageUri
+                        name = seller.name,
+                        email = seller.email,
+                        photoUrl = seller.photoUrl
                     )
                 }
             },
@@ -62,13 +63,13 @@ class UpdateProfileViewModel @Inject constructor(
         updateState { it.copy(isLoading = true) }
         tryToExecute(
             function = {
-                userRepository.updateCurrentUser(
-                    UpdateUser(
+                sellerRepository.updateCurrentSeller(
+                    UpdateSeller(
                         name = state.value.name,
                         email = state.value.email,
                         oldPassword = state.value.oldPassword,
                         newPassword = state.value.newPassword,
-                        photoUrl = state.value.imageUri.ifEmpty { null }
+                        imageUri = state.value.imageUri
                     )
                 )
             },
@@ -86,6 +87,7 @@ class UpdateProfileViewModel @Inject constructor(
                 updateState {
                     it.copy(
                         isLoading = false,
+                        error = "Something happen please try again later!"
                     )
                 }
                 sendNewEffect(UpdateProfileEffect.ShowToast("No internet connection"))
@@ -104,6 +106,7 @@ class UpdateProfileViewModel @Inject constructor(
                 updateState {
                     it.copy(
                         isLoading = false,
+                        error = "Something happen please try again later!"
                     )
                 }
                 sendNewEffect(UpdateProfileEffect.ShowToast(error.message.toString()))
@@ -131,10 +134,15 @@ class UpdateProfileViewModel @Inject constructor(
                 updateState {
                     it.copy(
                         isLoading = false,
+                        error = "Something happen please try again later!"
                     )
                 }
                 sendNewEffect(UpdateProfileEffect.ShowToast("Something happen please try again later!"))
             }
         }
+    }
+
+    fun onClickRetry() {
+        initSeller()
     }
 }

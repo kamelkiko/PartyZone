@@ -37,4 +37,8 @@
     <string name="log_out">Log Out</string>
     <string name="edit_profile">Edit Profile</string>
     <string name="icon_back">Icon back</string>
+    <string name="profile_image">Profile Image</string>
+    <string name="enter_old_password">Enter old password</string>
+    <string name="enter_new_password">Enter new password</string>
+    <string name="update">Update</string>
 </resources>
