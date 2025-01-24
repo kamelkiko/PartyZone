@@ -1,6 +1,5 @@
 package com.app.partyzone.core.data.repository.remote
 
-import android.net.Uri
 import com.app.partyzone.core.domain.entity.Notification
 import com.app.partyzone.core.domain.entity.Request
 import com.app.partyzone.core.domain.entity.Seller
@@ -85,14 +84,12 @@ class SellerRepositoryImpl @Inject constructor(
             throw UnknownErrorException("Failed to update your profile: ${e.message}")
         }
 
-        var photoUrl: String? = seller.photoUrl
-        if (seller.photoUrl != null && seller.photoUrl.startsWith("file:")) {
-            // Upload the new photo to Firebase Storage
-            val fileUri = Uri.parse(seller.photoUrl)
+        var photoUrl: String? = null
+        if (seller.imageUri != null) {
             val storageRef = firebaseStorage.reference
             val photoRef = storageRef.child("profile_images/${currentUser.uid}.jpg")
             try {
-                photoRef.putFile(fileUri).await()
+                photoRef.putFile(seller.imageUri).await()
                 photoUrl = photoRef.downloadUrl.await().toString()
             } catch (e: Exception) {
                 throw UnknownErrorException("Failed to upload photo: ${e.message}")
