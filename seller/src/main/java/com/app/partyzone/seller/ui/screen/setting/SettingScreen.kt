@@ -40,7 +40,7 @@ fun SettingScreen(viewModel: SettingViewModel = hiltViewModel()) {
 
             SettingEffect.NavigateToLogin -> {
                 navController.navigate(Screen.Login) {
-                    popUpTo<Screen.Setting> {
+                    popUpTo<Screen.Home> {
                         inclusive = true
                     }
                 }
