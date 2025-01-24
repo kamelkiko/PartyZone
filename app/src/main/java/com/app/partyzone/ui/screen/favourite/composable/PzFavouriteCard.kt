@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -26,6 +27,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
 import com.app.partyzone.R
 import com.app.partyzone.design_system.composable.PzCircleImage
 import com.app.partyzone.design_system.theme.Theme
@@ -51,12 +53,25 @@ fun PzFavouriteCard(
             .clickable { onClick() },
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        PzCircleImage(
-            painter = painterResource(id = com.app.partyzone.design_system.R.drawable.logo),
-            boxSize = 64.dp,
-            imageSize = 32.dp,
-            onClick = {}
-        )
+        if (imageUrl.isNullOrEmpty().not()) {
+            AsyncImage(
+                model = imageUrl,
+                contentDescription = stringResource(R.string.profile_image),
+                modifier = Modifier
+                    .size(32.dp)
+                    .clip(CircleShape),
+                placeholder = painterResource(id = com.app.partyzone.design_system.R.drawable.logo),
+                error = painterResource(id = com.app.partyzone.design_system.R.drawable.logo),
+                contentScale = androidx.compose.ui.layout.ContentScale.Crop,
+            )
+        } else {
+            PzCircleImage(
+                painter = painterResource(id = com.app.partyzone.design_system.R.drawable.logo),
+                boxSize = 64.dp,
+                imageSize = 32.dp,
+                onClick = {}
+            )
+        }
         Spacer(modifier = Modifier.width(16.dp))
         Column(
             verticalArrangement = Arrangement.spacedBy(8.dp),
