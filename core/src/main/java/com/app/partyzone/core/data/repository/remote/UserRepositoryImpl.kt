@@ -1,20 +1,25 @@
 package com.app.partyzone.core.data.repository.remote
 
+import android.net.Uri
 import com.app.partyzone.core.domain.entity.Favorite
 import com.app.partyzone.core.domain.entity.ItemType
 import com.app.partyzone.core.domain.entity.Notification
 import com.app.partyzone.core.domain.entity.NotificationType
 import com.app.partyzone.core.domain.entity.Request
 import com.app.partyzone.core.domain.entity.SearchResult
+import com.app.partyzone.core.domain.entity.UpdateUser
 import com.app.partyzone.core.domain.entity.User
 import com.app.partyzone.core.domain.repository.UserRepository
+import com.app.partyzone.core.domain.util.AuthorizationException
 import com.app.partyzone.core.domain.util.UnknownErrorException
 import com.app.partyzone.core.util.isNotEmptyAndBlank
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.Timestamp
+import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
+import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
@@ -25,6 +30,7 @@ import javax.inject.Inject
 class UserRepositoryImpl @Inject constructor(
     private val firebaseAuth: FirebaseAuth,
     private val firestore: FirebaseFirestore,
+    private val firebaseStorage: FirebaseStorage,
 ) : UserRepository {
 
     override suspend fun getCurrentUser(): User {
@@ -56,8 +62,56 @@ class UserRepositoryImpl @Inject constructor(
         )
     }
 
-    override suspend fun updateCurrentUser(user: User) {
+    override suspend fun updateCurrentUser(user: UpdateUser) {
+        val currentUser =
+            firebaseAuth.currentUser ?: throw AuthorizationException.UnAuthorizedException
 
+        val credential =
+            EmailAuthProvider.getCredential(currentUser.email ?: "", user.oldPassword)
+        try {
+            currentUser.reauthenticate(credential).await()
+        } catch (e: Exception) {
+            throw AuthorizationException.InvalidPasswordException
+        }
+
+        try {
+            if (user.email != currentUser.email) {
+                currentUser.verifyBeforeUpdateEmail(user.email).await()
+            }
+            if (user.newPassword.isNotEmptyAndBlank()) {
+                currentUser.updatePassword(user.newPassword).await()
+            }
+        } catch (e: Exception) {
+            throw UnknownErrorException("Failed to update your profile: ${e.message}")
+        }
+
+        var photoUrl: String? = user.photoUrl
+        if (user.photoUrl != null && user.photoUrl.startsWith("file:")) {
+            // Upload the new photo to Firebase Storage
+            val fileUri = Uri.parse(user.photoUrl)
+            val storageRef = firebaseStorage.reference
+            val photoRef = storageRef.child("profile_images/${currentUser.uid}.jpg")
+            try {
+                photoRef.putFile(fileUri).await()
+                photoUrl = photoRef.downloadUrl.await().toString()
+            } catch (e: Exception) {
+                throw UnknownErrorException("Failed to upload photo: ${e.message}")
+            }
+        }
+
+        val userRef = firestore.collection("users").document(currentUser.uid)
+        val updates = hashMapOf<String, Any>(
+            "name" to user.name,
+            "email" to user.email
+        )
+        if (photoUrl != null) {
+            updates["photoUrl"] = photoUrl
+        }
+        try {
+            userRef.update(updates).await()
+        } catch (e: Exception) {
+            throw UnknownErrorException("Failed to update your profile: ${e.message}")
+        }
     }
 
     override suspend fun addToFavorites(favorite: Favorite) {

@@ -4,14 +4,14 @@ import com.app.partyzone.core.domain.entity.Favorite
 import com.app.partyzone.core.domain.entity.Notification
 import com.app.partyzone.core.domain.entity.Request
 import com.app.partyzone.core.domain.entity.SearchResult
-import com.app.partyzone.core.domain.entity.Seller
+import com.app.partyzone.core.domain.entity.UpdateUser
 import com.app.partyzone.core.domain.entity.User
 import kotlinx.coroutines.flow.Flow
 
 interface UserRepository {
     suspend fun getCurrentUser(): User
     suspend fun getUserById(id: String): User
-    suspend fun updateCurrentUser(user: User)
+    suspend fun updateCurrentUser(user: UpdateUser)
     suspend fun addToFavorites(favorite: Favorite)
     suspend fun removeFromFavorites(favoriteId: String)
     suspend fun getFavorites(): List<Favorite>

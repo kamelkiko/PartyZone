@@ -3,12 +3,13 @@ package com.app.partyzone.core.domain.repository
 import com.app.partyzone.core.domain.entity.Notification
 import com.app.partyzone.core.domain.entity.Request
 import com.app.partyzone.core.domain.entity.Seller
+import com.app.partyzone.core.domain.entity.UpdateSeller
 import kotlinx.coroutines.flow.Flow
 
 interface SellerRepository {
     suspend fun getCurrentSeller(): Seller
     suspend fun getSellerById(id: String): Seller
-    suspend fun updateCurrentSeller(seller: Seller)
+    suspend fun updateCurrentSeller(seller: UpdateSeller)
     suspend fun getNotifications(): List<Notification>
     suspend fun sendNotification(notification: Notification)
     fun hasNotification(): Flow<Boolean>
