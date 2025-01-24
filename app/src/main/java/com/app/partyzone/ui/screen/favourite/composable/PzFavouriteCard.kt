@@ -54,7 +54,7 @@ fun PzFavouriteCard(
         PzCircleImage(
             painter = painterResource(id = com.app.partyzone.design_system.R.drawable.logo),
             boxSize = 64.dp,
-            imageSize = 64.dp,
+            imageSize = 32.dp,
             onClick = {}
         )
         Spacer(modifier = Modifier.width(16.dp))
