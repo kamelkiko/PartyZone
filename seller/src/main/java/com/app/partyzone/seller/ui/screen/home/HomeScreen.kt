@@ -1,6 +1,9 @@
 package com.app.partyzone.seller.ui.screen.home
 
 import android.annotation.SuppressLint
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -22,17 +25,22 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Comment
 import androidx.compose.material.icons.filled.PostAdd
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -47,6 +55,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import coil.compose.AsyncImage
 import com.app.partyzone.core.domain.SellerPost
+import com.app.partyzone.core.domain.repository.PostRepository
 import com.app.partyzone.design_system.composable.PzChip
 import com.app.partyzone.design_system.composable.PzIconButton
 import com.app.partyzone.design_system.theme.Theme
@@ -61,6 +70,7 @@ import com.app.partyzone.seller.ui.util.EventHandler
 fun HomeScreen(homeViewModel: HomeViewModel = hiltViewModel()) {
     val state by homeViewModel.state.collectAsState()
     val posts by homeViewModel.posts.collectAsState()
+    var isCreate by remember { mutableStateOf(false) }
 
     ComposableLifecycle { _, event ->
         if (event == Lifecycle.Event.ON_RESUME)
@@ -108,14 +118,23 @@ fun HomeScreen(homeViewModel: HomeViewModel = hiltViewModel()) {
                 onClickRetry = homeViewModel::onClickRetry
             )
         }
-        AnimatedVisibility(visible = state.isLoading.not() && state.error.isNullOrEmpty()) {
+        AnimatedVisibility(visible = state.isLoading.not() && state.error.isNullOrEmpty() && isCreate.not()) {
             HomeContent(
                 name = state.sellerState.name,
                 onClickNotification = homeViewModel::onClickNotification,
                 hasNotifications = state.hasNotifications,
                 posts = posts,
-                onCreatePost = {}
+                onCreatePost = { isCreate = true }
             )
+        }
+        AnimatedVisibility(visible = state.isLoading.not() && state.error.isNullOrEmpty() && isCreate) {
+            CreatePostScreen(
+                state.sellerState.name,
+                state.sellerState.photoUrl ?: ""
+            ) { post, images ->
+                homeViewModel.createPost(post, images)
+                isCreate = false
+            }
         }
     }
 }
@@ -216,6 +235,12 @@ fun PostItem(post: SellerPost) {
         elevation = CardDefaults.cardElevation(4.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
+            // Caption
+            Text(
+                text = post.description,
+                style = Theme.typography.body,
+                modifier = Modifier.padding(vertical = 8.dp)
+            )
             // Post Images
             LazyRow {
                 items(post.images) { imageUrl ->
@@ -229,28 +254,71 @@ fun PostItem(post: SellerPost) {
                     )
                 }
             }
+        }
+    }
+}
 
-            // Caption
-            Text(
-                text = post.description,
-                style = Theme.typography.body,
-                modifier = Modifier.padding(vertical = 8.dp)
-            )
+@Composable
+fun CreatePostScreen(
+    name: String,
+    image: String,
+    onPostCreated: (SellerPost, List<Uri>) -> Unit,
+) {
+    var caption by remember { mutableStateOf("") }
+    var selectedImages by remember { mutableStateOf<List<Uri>>(emptyList()) }
+    val galleryLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetMultipleContents(),
+        onResult = { uris -> selectedImages = uris }
+    )
 
-            // Likes/Comments
-            Row(
-                horizontalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier.fillMaxWidth()
-            ) {
+    Column(modifier = Modifier.padding(16.dp)) {
+        // Image Selection
+        Button(onClick = { galleryLauncher.launch("image/*") }) {
+            Text("Select Images (max 5)")
+        }
 
-                IconButton(onClick = { /* Handle comment */ }) {
-                    Icon(
-                        imageVector = Icons.Filled.Comment,
-                        contentDescription = "Comment",
-                        tint = Theme.colors.contentPrimary
-                    )
-                }
+        // Selected Images Preview
+        LazyRow {
+            items(selectedImages) { uri ->
+                AsyncImage(
+                    model = uri,
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(100.dp)
+                        .padding(4.dp)
+                        .clip(RoundedCornerShape(8.dp))
+                )
             }
+        }
+
+        // Caption Input
+        OutlinedTextField(
+            value = caption,
+            onValueChange = { caption = it },
+            label = { Text("Write a caption...") },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp)
+        )
+
+        // Post Button
+        Button(
+            onClick = {
+                // Call repository to create post
+                val post = SellerPost(
+                    description = caption,
+                    sellerName = name,
+                    sellerImageUrl = image,
+                    images = selectedImages.map { it.toString() },
+                    likes = 0,
+                    reviews = emptyList(),
+                    category = "Music"
+                )
+                onPostCreated(post, selectedImages)
+            },
+            enabled = caption.isNotEmpty() && selectedImages.isNotEmpty()
+        ) {
+            Text("Post")
         }
     }
 }

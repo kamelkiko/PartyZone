@@ -1,5 +1,6 @@
 package com.app.partyzone.seller.ui.screen.home
 
+import android.net.Uri
 import androidx.lifecycle.viewModelScope
 import com.app.partyzone.core.domain.SellerPost
 import com.app.partyzone.core.domain.repository.PostRepository
@@ -28,6 +29,15 @@ class HomeViewModel @Inject constructor(
             started = SharingStarted.WhileSubscribed(5000),
             initialValue = emptyList()
         )
+
+    fun createPost(post: SellerPost, images: List<Uri>) {
+        updateState { it.copy(isLoading = true) }
+        tryToExecute(
+            function = { postRepository.createPost(post, images) },
+            onSuccess = { updateState { it.copy(isLoading = false) } },
+            onError = ::handleError
+        )
+    }
 
     fun hasNotifications() {
         updateState { it.copy(hasNotifications = false) }

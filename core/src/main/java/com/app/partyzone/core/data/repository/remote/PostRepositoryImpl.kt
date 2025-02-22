@@ -22,7 +22,7 @@ class PostRepositoryImpl @Inject constructor(
 ) : PostRepository {
 
     override suspend fun createPost(post: SellerPost, images: List<Uri>): Boolean {
-        firebaseAuth.currentUser ?: throw AuthorizationException.UnAuthorizedException
+        val user = firebaseAuth.currentUser ?: throw AuthorizationException.UnAuthorizedException
 
         val postId = firestore.collection("Post").document().id
         // Upload images to Firebase Storage
@@ -40,11 +40,11 @@ class PostRepositoryImpl @Inject constructor(
         }
 
         // Update post with image URLs
-        val updatedPost = post.copy(images = imageUrls)
+        val updatedPost = post.copy(images = imageUrls, id = postId, sellerId = user.uid)
 
         // Save post to Firestore
         return try {
-            firestore.collection("Post").document(postId).set(post.copy(id = postId)).await()
+            firestore.collection("Post").document(postId).set(updatedPost).await()
             true
         } catch (e: Exception) {
             throw UnknownErrorException("Failed to create post: ${e.message}")
