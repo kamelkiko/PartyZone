@@ -1,5 +1,6 @@
 package com.app.partyzone.core.data.repository.remote
 
+import com.app.partyzone.core.domain.SellerPost
 import com.app.partyzone.core.domain.entity.Favorite
 import com.app.partyzone.core.domain.entity.ItemType
 import com.app.partyzone.core.domain.entity.Notification
@@ -17,6 +18,7 @@ import com.google.firebase.Timestamp
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.channels.awaitClose
@@ -332,7 +334,40 @@ class UserRepositoryImpl @Inject constructor(
         }
     }
 
+    override fun getAllPosts(): Flow<List<SellerPost>> = callbackFlow {
+        val collectionRef = firestore.collection("Post")
+            .orderBy("timestamp", Query.Direction.DESCENDING)
+
+        val listener = collectionRef.addSnapshotListener { snapshot, error ->
+            if (error != null) {
+                close(error)
+                return@addSnapshotListener
+            }
+
+            if (snapshot != null) {
+                val posts = snapshot.toObjects(SellerPost::class.java)
+                trySend(posts).isSuccess
+            }
+        }
+
+        awaitClose {
+            listener.remove()
+        }
+    }
+
     override suspend fun sendRequest(request: Request) {
+        val querySnapshot = firestore.collection("requests")
+            .whereEqualTo("sellerId", request.sellerId)
+            .whereEqualTo("userId", request.userId)
+            .whereEqualTo("itemId", request.itemId)
+            .get()
+            .await()
+
+        // If a matching request already exists, throw an exception
+        if (!querySnapshot.isEmpty) {
+            throw UnknownErrorException("A request already exists.")
+        }
+        // If no matching request exists, proceed with sending the request
         firestore.collection("requests")
             .document(request.id)
             .set(request)

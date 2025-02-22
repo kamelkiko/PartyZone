@@ -1,6 +1,7 @@
 package com.app.partyzone.seller.ui.screen.party
 
 import com.app.partyzone.core.domain.entity.Status
+import com.app.partyzone.core.domain.repository.SellerRepository
 import com.app.partyzone.core.domain.repository.UserRepository
 import com.app.partyzone.seller.ui.base.BaseViewModel
 import com.app.partyzone.seller.ui.base.ErrorState
@@ -9,7 +10,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class PartyViewModel @Inject constructor(
-    private val userRepository: UserRepository,
+    private val userRepository: SellerRepository,
 ) : BaseViewModel<PartyState, PartyEffect>(PartyState()) {
 
     init {
@@ -23,7 +24,7 @@ class PartyViewModel @Inject constructor(
     private fun fetchUserRequests() {
         updateState { it.copy(isLoading = true, error = null, partyState = emptyList()) }
         tryToExecute(
-            function = { userRepository.fetchUserRequests() },
+            function = { userRepository.fetchSellerRequests() },
             onSuccess = { favourite ->
                 updateState {
                     it.copy(

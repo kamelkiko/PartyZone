@@ -1,5 +1,6 @@
 package com.app.partyzone.ui.screen.home
 
+import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -16,11 +17,21 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -30,12 +41,17 @@ import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
+import coil.compose.AsyncImage
 import com.app.partyzone.R
+import com.app.partyzone.core.domain.SellerPost
+import com.app.partyzone.core.domain.entity.Request
+import com.app.partyzone.design_system.composable.PzButton
 import com.app.partyzone.design_system.composable.PzChip
 import com.app.partyzone.design_system.composable.PzIconButton
 import com.app.partyzone.design_system.theme.Theme
@@ -44,10 +60,13 @@ import com.app.partyzone.ui.composable.ErrorView
 import com.app.partyzone.ui.navigation.Screen
 import com.app.partyzone.ui.util.ComposableLifecycle
 import com.app.partyzone.ui.util.EventHandler
+import java.util.UUID
 
 @Composable
 fun HomeScreen(homeViewModel: HomeViewModel = hiltViewModel()) {
     val state by homeViewModel.state.collectAsState()
+    val posts by homeViewModel.posts.collectAsState(emptyList())
+    val context = LocalContext.current
 
     ComposableLifecycle { _, event ->
         if (event == Lifecycle.Event.ON_RESUME)
@@ -66,6 +85,12 @@ fun HomeScreen(homeViewModel: HomeViewModel = hiltViewModel()) {
             }
 
             else -> {}
+        }
+    }
+
+    LaunchedEffect(state.message) {
+        state.message?.let {
+            Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -104,7 +129,22 @@ fun HomeScreen(homeViewModel: HomeViewModel = hiltViewModel()) {
                 name = state.userState.name,
                 hasNotifications = state.hasNotifications,
                 onClickNotification = homeViewModel::onClickNotification,
-                onClickSearch = homeViewModel::onClickSearch
+                onClickSearch = homeViewModel::onClickSearch,
+                posts = posts,
+                isLoading = state.isLoadingRequest,
+                onSendRequest = { post ->
+                    val request = Request(
+                        id = UUID.randomUUID().toString(),
+                        userId = state.userState.id,
+                        sellerId = post.sellerId,
+                        itemId = post.id,
+                        itemName = post.description,
+                        itemImageUrl = post.images.firstOrNull() ?: "",
+                        type = "Post",
+                        status = "Upcoming"
+                    )
+                    homeViewModel.sendRequest(request)
+                }
             )
         }
     }
@@ -114,7 +154,10 @@ fun HomeScreen(homeViewModel: HomeViewModel = hiltViewModel()) {
 private fun HomeContent(
     name: String,
     hasNotifications: Boolean,
+    isLoading: Boolean,
     onClickNotification: () -> Unit,
+    posts: List<SellerPost>,
+    onSendRequest: (SellerPost) -> Unit,
     onClickSearch: () -> Unit
 ) {
     Column(
@@ -210,6 +253,78 @@ private fun HomeContent(
         }
         Spacer(modifier = Modifier.height(24.dp))
         Spacer(modifier = Modifier.width(16.dp))
-        PzChip(label = "Music", isSelected = false, onClick = {})
+        LazyColumn(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            items(posts) { post ->
+                PostItem(
+                    post = post,
+                    isLoading = isLoading,
+                    onSendRequest = { onSendRequest(post) })
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun PostItem(
+    post: SellerPost,
+    isLoading: Boolean,
+    onSendRequest: () -> Unit
+) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp),
+        elevation = CardDefaults.cardElevation(4.dp)
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Row {
+                AsyncImage(
+                    model = post.sellerImageUrl,
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(64.dp)
+                        .padding(4.dp)
+                )
+                Text(
+                    text = post.sellerName,
+                    style = Theme.typography.body,
+                    modifier = Modifier.padding(vertical = 8.dp)
+                )
+            }
+
+
+            // Caption
+            Text(
+                text = post.description,
+                style = Theme.typography.body,
+                modifier = Modifier.padding(vertical = 8.dp)
+            )
+
+            // Post Images
+            LazyRow {
+                items(post.images) { imageUrl ->
+                    AsyncImage(
+                        model = imageUrl,
+                        contentDescription = null,
+                        modifier = Modifier
+                            .size(200.dp)
+                            .padding(4.dp)
+                            .clip(RoundedCornerShape(8.dp))
+                    )
+                }
+            }
+
+            // Send Request Button
+            PzButton(
+                onClick = onSendRequest,
+                modifier = Modifier.fillMaxWidth(),
+                title = "Send Request",
+                isLoading = isLoading
+            )
+        }
     }
 }

@@ -6,7 +6,9 @@ import javax.annotation.concurrent.Immutable
 data class HomeState(
     val userState: UserState = UserState(),
     val isLoading: Boolean = false,
+    val isLoadingRequest: Boolean = false,
     val error: String? = null,
+    val message: String? = null,
     val hasNotifications: Boolean = false,
 )
 

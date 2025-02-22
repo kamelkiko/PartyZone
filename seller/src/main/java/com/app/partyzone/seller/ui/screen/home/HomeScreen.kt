@@ -29,6 +29,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -56,8 +57,10 @@ import androidx.lifecycle.Lifecycle
 import coil.compose.AsyncImage
 import com.app.partyzone.core.domain.SellerPost
 import com.app.partyzone.core.domain.repository.PostRepository
+import com.app.partyzone.design_system.composable.PzButton
 import com.app.partyzone.design_system.composable.PzChip
 import com.app.partyzone.design_system.composable.PzIconButton
+import com.app.partyzone.design_system.composable.PzTextField
 import com.app.partyzone.design_system.theme.Theme
 import com.app.partyzone.design_system.theme.brush
 import com.app.partyzone.seller.R
@@ -258,6 +261,7 @@ fun PostItem(post: SellerPost) {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CreatePostScreen(
     name: String,
@@ -292,17 +296,17 @@ fun CreatePostScreen(
         }
 
         // Caption Input
-        OutlinedTextField(
-            value = caption,
+        PzTextField(
+            text = caption,
             onValueChange = { caption = it },
-            label = { Text("Write a caption...") },
+            hint = "Write a caption...",
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 8.dp)
         )
 
         // Post Button
-        Button(
+        PzButton(
             onClick = {
                 // Call repository to create post
                 val post = SellerPost(
@@ -316,9 +320,8 @@ fun CreatePostScreen(
                 )
                 onPostCreated(post, selectedImages)
             },
+            title = "Post",
             enabled = caption.isNotEmpty() && selectedImages.isNotEmpty()
-        ) {
-            Text("Post")
-        }
+        )
     }
 }

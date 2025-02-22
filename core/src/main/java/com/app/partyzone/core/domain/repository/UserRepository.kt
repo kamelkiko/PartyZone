@@ -1,5 +1,6 @@
 package com.app.partyzone.core.domain.repository
 
+import com.app.partyzone.core.domain.SellerPost
 import com.app.partyzone.core.domain.entity.Favorite
 import com.app.partyzone.core.domain.entity.Notification
 import com.app.partyzone.core.domain.entity.Request
@@ -22,4 +23,5 @@ interface UserRepository {
     suspend fun sendRequest(request: Request)
     suspend fun cancelRequest(requestId: String)
     suspend fun fetchUserRequests(): List<Request>
+    fun getAllPosts(): Flow<List<SellerPost>>
 }

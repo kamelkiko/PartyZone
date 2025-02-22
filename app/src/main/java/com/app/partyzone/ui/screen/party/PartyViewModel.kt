@@ -10,7 +10,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class PartyViewModel @Inject constructor(
-   private val sellerRepository: SellerRepository
+    private val sellerRepository: UserRepository
 ) : BaseViewModel<PartyState, PartyEffect>(PartyState()) {
 
     init {
@@ -24,7 +24,7 @@ class PartyViewModel @Inject constructor(
     private fun fetchSellerRequests() {
         updateState { it.copy(isLoading = true, error = null, partyState = emptyList()) }
         tryToExecute(
-            function = { sellerRepository.fetchSellerRequests() },
+            function = { sellerRepository.fetchUserRequests() },
             onSuccess = { favourite ->
                 updateState {
                     it.copy(
