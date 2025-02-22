@@ -1,19 +1,33 @@
 package com.app.partyzone.seller.ui.screen.home
 
+import androidx.lifecycle.viewModelScope
+import com.app.partyzone.core.domain.SellerPost
+import com.app.partyzone.core.domain.repository.PostRepository
 import com.app.partyzone.core.domain.repository.SellerRepository
 import com.app.partyzone.seller.ui.base.BaseViewModel
 import com.app.partyzone.seller.ui.base.ErrorState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val sellerRepository: SellerRepository,
+    private val postRepository: PostRepository,
 ) : BaseViewModel<HomeState, HomeEffect>(HomeState()) {
     init {
         fetchUser()
         hasNotifications()
     }
+
+    val posts: StateFlow<List<SellerPost>> = postRepository.getSellerPosts()
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = emptyList()
+        )
 
     fun hasNotifications() {
         updateState { it.copy(hasNotifications = false) }

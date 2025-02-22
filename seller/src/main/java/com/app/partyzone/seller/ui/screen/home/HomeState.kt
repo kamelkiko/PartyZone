@@ -1,5 +1,7 @@
 package com.app.partyzone.seller.ui.screen.home
 
+import com.app.partyzone.core.domain.SellerPost
+import kotlinx.coroutines.flow.StateFlow
 import javax.annotation.concurrent.Immutable
 
 @Immutable
