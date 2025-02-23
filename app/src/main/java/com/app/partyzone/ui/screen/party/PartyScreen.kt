@@ -124,6 +124,23 @@ private fun PartyContent(
         }
         when (selectedType) {
             Status.Upcoming -> {
+                item {
+                    Column(
+                        modifier = Modifier.fillMaxSize(),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        AnimatedVisibility(partyState.none { it.status == Status.Upcoming.name } && isLoading.not() && error == null) {
+                            LottieAnimation(
+                                composition = composition,
+                                progress = { progress },
+                                modifier = Modifier
+                                    .size(256.dp)
+                                    .align(Alignment.CenterHorizontally)
+                            )
+                        }
+                    }
+                }
                 items(partyState.filter { it.status == Status.Upcoming.name }) {
                     PzFavouriteCard(
                         name = it.itemName + " (${it.type})",
@@ -136,6 +153,23 @@ private fun PartyContent(
             }
 
             Status.Completed -> {
+                item {
+                    Column(
+                        modifier = Modifier.fillMaxSize(),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        AnimatedVisibility(partyState.none { it.status == Status.Completed.name } && isLoading.not() && error == null) {
+                            LottieAnimation(
+                                composition = composition,
+                                progress = { progress },
+                                modifier = Modifier
+                                    .size(256.dp)
+                                    .align(Alignment.CenterHorizontally)
+                            )
+                        }
+                    }
+                }
                 items(partyState.filter { it.status == Status.Completed.name }) {
                     PzFavouriteCard(
                         name = it.itemName + " (${it.type})",
@@ -148,6 +182,23 @@ private fun PartyContent(
             }
 
             Status.Cancelled -> {
+                item {
+                    Column(
+                        modifier = Modifier.fillMaxSize(),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        AnimatedVisibility(partyState.none { it.status == Status.Cancelled.name } && isLoading.not() && error == null) {
+                            LottieAnimation(
+                                composition = composition,
+                                progress = { progress },
+                                modifier = Modifier
+                                    .size(256.dp)
+                                    .align(Alignment.CenterHorizontally)
+                            )
+                        }
+                    }
+                }
                 items(partyState.filter { it.status == Status.Cancelled.name }) {
                     PzFavouriteCard(
                         name = it.itemName + " (${it.type})",

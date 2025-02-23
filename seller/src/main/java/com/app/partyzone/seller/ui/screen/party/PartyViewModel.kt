@@ -99,4 +99,32 @@ class PartyViewModel @Inject constructor(
     fun onClickFavouriteItem(id: String, type: String) {
         sendNewEffect(PartyEffect.NavigateToDetails(id, type))
     }
+
+    fun onClickAccept(id: String) {
+        updateState { it.copy(isLoading = true, error = null) }
+        tryToExecute(
+            function = { userRepository.acceptRequest(id) },
+            onSuccess = {
+                updateState { it.copy(isLoading = false, error = null) }
+                fetchUserRequests()
+            },
+            onError = { error ->
+                handleError(error)
+            }
+        )
+    }
+
+    fun onClickCancel(id: String) {
+        updateState { it.copy(isLoading = true, error = null) }
+        tryToExecute(
+            function = { userRepository.cancelRequest(id) },
+            onSuccess = {
+                updateState { it.copy(isLoading = false, error = null) }
+                fetchUserRequests()
+            },
+            onError = { error ->
+                handleError(error)
+            }
+        )
+    }
 }

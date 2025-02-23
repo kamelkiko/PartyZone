@@ -65,7 +65,9 @@ fun PartyScreen(partyViewModel: PartyViewModel = hiltViewModel()) {
             error = state.error,
             onClickItem = partyViewModel::onClickFavouriteItem,
             onClickTab = partyViewModel::onClickTab,
-            onClickRetry = partyViewModel::onClickRetry
+            onClickRetry = partyViewModel::onClickRetry,
+            onClickAccept = partyViewModel::onClickAccept,
+            onClickCancel = partyViewModel::onClickCancel
         )
     }
 }
@@ -79,6 +81,8 @@ private fun PartyContent(
     onClickItem: (String, String) -> Unit,
     onClickTab: (Status) -> Unit,
     onClickRetry: () -> Unit,
+    onClickAccept: (String) -> Unit = {},
+    onClickCancel: (String) -> Unit = {},
 ) {
     val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.empty_anim))
     val progress by animateLottieCompositionAsState(composition, iterations = Int.MAX_VALUE)
@@ -124,18 +128,56 @@ private fun PartyContent(
         }
         when (selectedType) {
             Status.Upcoming -> {
+                item {
+                    Column(
+                        modifier = Modifier.fillMaxSize(),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        AnimatedVisibility(partyState.none { it.status == Status.Upcoming.name } && isLoading.not() && error == null) {
+                            LottieAnimation(
+                                composition = composition,
+                                progress = { progress },
+                                modifier = Modifier
+                                    .size(256.dp)
+                                    .align(Alignment.CenterHorizontally)
+                            )
+                        }
+                    }
+                }
                 items(partyState.filter { it.status == Status.Upcoming.name }) {
                     PzFavouriteCard(
                         name = it.itemName + " (${it.type})",
                         location = it.status,
                         imageUrl = it.itemImageUrl,
                         onClick = { onClickItem(it.id, it.type) },
-                        price = null
+                        isUpcoming = true,
+                        price = null,
+                        id = it.id,
+                        onClickAccept = onClickAccept,
+                        onClickCancel = onClickCancel
                     )
                 }
             }
 
             Status.Completed -> {
+                item {
+                    Column(
+                        modifier = Modifier.fillMaxSize(),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        AnimatedVisibility(partyState.none { it.status == Status.Completed.name } && isLoading.not() && error == null) {
+                            LottieAnimation(
+                                composition = composition,
+                                progress = { progress },
+                                modifier = Modifier
+                                    .size(256.dp)
+                                    .align(Alignment.CenterHorizontally)
+                            )
+                        }
+                    }
+                }
                 items(partyState.filter { it.status == Status.Completed.name }) {
                     PzFavouriteCard(
                         name = it.itemName + " (${it.type})",
@@ -148,6 +190,23 @@ private fun PartyContent(
             }
 
             Status.Cancelled -> {
+                item {
+                    Column(
+                        modifier = Modifier.fillMaxSize(),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        AnimatedVisibility(partyState.none { it.status == Status.Cancelled.name } && isLoading.not() && error == null) {
+                            LottieAnimation(
+                                composition = composition,
+                                progress = { progress },
+                                modifier = Modifier
+                                    .size(256.dp)
+                                    .align(Alignment.CenterHorizontally)
+                            )
+                        }
+                    }
+                }
                 items(partyState.filter { it.status == Status.Cancelled.name }) {
                     PzFavouriteCard(
                         name = it.itemName + " (${it.type})",
@@ -155,24 +214,6 @@ private fun PartyContent(
                         imageUrl = it.itemImageUrl,
                         onClick = { onClickItem(it.id, it.type) },
                         price = null
-                    )
-                }
-            }
-        }
-
-        item {
-            Column(
-                modifier = Modifier.fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
-            ) {
-                AnimatedVisibility(partyState.isEmpty() && isLoading.not() && error == null) {
-                    LottieAnimation(
-                        composition = composition,
-                        progress = { progress },
-                        modifier = Modifier
-                            .size(256.dp)
-                            .align(Alignment.CenterHorizontally)
                     )
                 }
             }
