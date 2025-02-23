@@ -444,9 +444,7 @@ class UserRepositoryImpl @Inject constructor(
                     type = request.get("type").toString(),
                     createdAt = request.getTimestamp("createdAt")
                         ?: throw UnknownErrorException("TimeStamp is null"),
-                    sellerPhoneNumber = if (request.get("type")
-                            .toString() == Status.Completed.name
-                    ) sellerPhoneNumber else ""
+                    sellerPhoneNumber = sellerPhoneNumber
                 )
             )
         }
