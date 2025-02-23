@@ -14,4 +14,5 @@ data class UpdateProfileState(
     val newPassword: String = "",
     val imageUri: Uri? = null,
     val photoUrl: String? = null,
+    val phoneNumber: String = "",
 )

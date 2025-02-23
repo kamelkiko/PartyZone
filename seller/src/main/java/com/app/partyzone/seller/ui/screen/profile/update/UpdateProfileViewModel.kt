@@ -25,6 +25,10 @@ class UpdateProfileViewModel @Inject constructor(
         updateState { it.copy(name = name) }
     }
 
+    fun onPhoneChange(number: String) {
+        updateState { it.copy(phoneNumber = number) }
+    }
+
     fun onEmailChanged(email: String) {
         updateState { it.copy(email = email) }
     }
@@ -51,7 +55,8 @@ class UpdateProfileViewModel @Inject constructor(
                         isLoadingGetUser = false,
                         name = seller.name,
                         email = seller.email,
-                        photoUrl = seller.photoUrl
+                        photoUrl = seller.photoUrl,
+                        phoneNumber = seller.contactInfo
                     )
                 }
             },
@@ -69,7 +74,8 @@ class UpdateProfileViewModel @Inject constructor(
                         email = state.value.email,
                         oldPassword = state.value.oldPassword,
                         newPassword = state.value.newPassword,
-                        imageUri = state.value.imageUri
+                        imageUri = state.value.imageUri,
+                        phoneNumber = state.value.phoneNumber
                     )
                 )
             },

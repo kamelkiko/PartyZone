@@ -101,7 +101,8 @@ class SellerRepositoryImpl @Inject constructor(
         val userRef = firestore.collection("sellers").document(currentUser.uid)
         val updates = hashMapOf<String, Any>(
             "name" to seller.name,
-            "email" to seller.email
+            "email" to seller.email,
+            "contactInfo" to seller.phoneNumber,
         )
         if (photoUrl != null) {
             updates["photoUrl"] = photoUrl

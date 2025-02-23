@@ -21,6 +21,7 @@ data class PartyItemState(
     val itemId: String = "", // ID of the post or offer
     val itemName: String = "", // Name of the post or offer
     val itemImageUrl: String = "", // Image URL of the post or offer
+    val phoneNumber: String = "", // Image URL of the post or offer
     val type: String = "", // "post" or "offer"
     val status: String = "Pending", // Pending, Completed, Cancelled
     val createdAt: Timestamp = Timestamp.now(), // Timestamp of when the request was create

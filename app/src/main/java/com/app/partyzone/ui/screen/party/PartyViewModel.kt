@@ -35,6 +35,7 @@ class PartyViewModel @Inject constructor(
                                 userId = item.userId,
                                 sellerId = item.sellerId,
                                 itemImageUrl = item.itemImageUrl,
+                                phoneNumber = item.sellerPhoneNumber,
                                 status = item.status,
                                 itemId = item.itemId,
                                 type = item.type,

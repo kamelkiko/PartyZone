@@ -11,5 +11,6 @@ data class Request(
     val itemImageUrl: String = "", // Image URL of the post or offer
     val type: String = "", // "post" or "offer"
     val status: String = "Pending", // Pending, Completed, Cancelled
-    val createdAt: Timestamp = Timestamp.now() // Timestamp of when the request was create
+    val createdAt: Timestamp = Timestamp.now(), // Timestamp of when the request was create
+    val sellerPhoneNumber: String = "",
 )

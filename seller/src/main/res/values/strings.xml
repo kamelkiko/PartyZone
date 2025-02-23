@@ -41,4 +41,6 @@
     <string name="enter_old_password">Enter old password</string>
     <string name="enter_new_password">Enter new password</string>
     <string name="update">Update</string>
+    <string name="enter_phone_number">Enter phone number</string>
+    <string name="phone_icon">Phone Icon</string>
 </resources>

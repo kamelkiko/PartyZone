@@ -29,6 +29,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.app.partyzone.R
+import com.app.partyzone.core.util.isNotEmptyAndBlank
 import com.app.partyzone.design_system.composable.PzCircleImage
 import com.app.partyzone.design_system.theme.Theme
 import com.app.partyzone.design_system.theme.brush
@@ -39,8 +40,9 @@ fun PzFavouriteCard(
     location: String,
     imageUrl: String?,
     price: Double?,
-    onClick: () -> Unit,
     modifier: Modifier = Modifier,
+    phoneNumber: String = "",
+    onClick: () -> Unit,
 ) {
     Row(
         modifier = modifier
@@ -114,6 +116,21 @@ fun PzFavouriteCard(
                             textAlign = TextAlign.Center
                         )
                     }
+                }
+            }
+            if (phoneNumber.isNotEmptyAndBlank()) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        text = "Phone : ",
+                        color = Theme.colors.contentPrimary,
+                        style = Theme.typography.titleLarge
+                    )
+                    Spacer(modifier = Modifier.width(16.dp))
+                    Text(
+                        text = phoneNumber,
+                        color = Theme.colors.contentPrimary,
+                        style = Theme.typography.titleLarge
+                    )
                 }
             }
         }

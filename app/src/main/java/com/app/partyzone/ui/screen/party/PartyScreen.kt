@@ -176,6 +176,7 @@ private fun PartyContent(
                         location = it.status,
                         imageUrl = it.itemImageUrl,
                         onClick = { onClickItem(it.id, it.type) },
+                        phoneNumber = it.phoneNumber,
                         price = null
                     )
                 }

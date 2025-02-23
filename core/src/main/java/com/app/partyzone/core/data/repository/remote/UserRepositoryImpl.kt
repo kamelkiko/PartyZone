@@ -7,6 +7,7 @@ import com.app.partyzone.core.domain.entity.Notification
 import com.app.partyzone.core.domain.entity.NotificationType
 import com.app.partyzone.core.domain.entity.Request
 import com.app.partyzone.core.domain.entity.SearchResult
+import com.app.partyzone.core.domain.entity.Status
 import com.app.partyzone.core.domain.entity.UpdateUser
 import com.app.partyzone.core.domain.entity.User
 import com.app.partyzone.core.domain.repository.UserRepository
@@ -17,6 +18,7 @@ import com.google.android.gms.tasks.Tasks
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FieldPath
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.QuerySnapshot
@@ -415,7 +417,21 @@ class UserRepositoryImpl @Inject constructor(
             .get()
             .await()
 
+        val sellerIds = data.map { it.get("sellerId").toString() }.distinct()
+
+        // Fetch all sellers in a single query
+        val sellersSnapshot = firestore.collection("sellers")
+            .whereIn(FieldPath.documentId(), sellerIds)
+            .get()
+            .await()
+
+        // Create a map of sellerId to seller details
+        val sellerMap = sellersSnapshot.associateBy { it.id }
+
         data.forEach { request ->
+            val sellerId = request.get("sellerId").toString()
+            val sellerPhoneNumber = sellerMap[sellerId]?.getString("contactInfo") ?: ""
+
             requests.add(
                 Request(
                     id = request.get("id").toString(),
@@ -428,6 +444,9 @@ class UserRepositoryImpl @Inject constructor(
                     type = request.get("type").toString(),
                     createdAt = request.getTimestamp("createdAt")
                         ?: throw UnknownErrorException("TimeStamp is null"),
+                    sellerPhoneNumber = if (request.get("type")
+                            .toString() == Status.Completed.name
+                    ) sellerPhoneNumber else ""
                 )
             )
         }
